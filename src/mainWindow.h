@@ -38,6 +38,7 @@ private:
         void on_pretendCheckBox_toggled();
         void on_startButton_activate();
 
+        string findPixmap(string);
         unsigned long getSize();
         void printValues();
 

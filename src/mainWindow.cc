@@ -13,10 +13,10 @@
 #include "mainWindow.h"
 #include "fileSelection.h"
 
-#define cd_image "/home/pug/src/imfavorites/pixmaps/cdrom_umount.svgz"
-#define dvd_image "/home/pug/src/imfavorites/pixmaps/dvd_umount.svgz"
-#define number_image "/home/pug/src/imfavorites/pixmaps/poundsign.svgz"
-#define portableaudio_image "/home/pug/src/imfavorites/pixmaps/cdrom_umount.svgz"
+#define cd_image "cdrom_umount.svgz"
+#define dvd_image "dvd_umount.svgz"
+#define number_image "poundsign.svgz"
+#define portableaudio_image "cdrom_umount.svgz"
 
 extern mainWindow *mainWindow;
 
@@ -96,28 +96,29 @@ void mainWindow::on_browseButton_activate()
 
 void mainWindow::on_SizeCDRadio_toggled()
 {
-    image1->set(cd_image);
+    image1->set(this->findPixmap(cd_image));
 }
 
 void mainWindow::on_sizeCD2Radio_toggled()
 {
-    image1->set(cd_image);
+    image1->set(this->findPixmap(cd_image));
 }
 
 void mainWindow::on_sizeDVDRadio_toggled()
 {
-    image1->set(dvd_image);
+    image1->set(this->findPixmap(dvd_image));
 }
 
 void mainWindow::on_sizeOtherRadio_toggled()
 {
-    image1->set(portableaudio_image);
+    image1->set(this->findPixmap(portableaudio_image));
+
 }
 
 void mainWindow::on_limitRadio_toggled()
 {
-    if (sizeDVDRadio->get_active()) image1->set(dvd_image);
-    else image1->set(cd_image);
+    if (sizeDVDRadio->get_active()) image1->set(this->findPixmap(dvd_image));
+    else image1->set(this->findPixmap(cd_image));
 
     numSongsSpinButton->set_sensitive(false);
     sizeCDRadio->set_sensitive(true);
@@ -133,7 +134,7 @@ void mainWindow::on_numSongsSpinButton_changed()
 
 void mainWindow::on_limitNumberRadio_toggled()
 {
-    image1->set(number_image);
+    image1->set(this->findPixmap(number_image));
     numSongsSpinButton->set_sensitive(true);
     sizeCDRadio->set_sensitive(false);
     sizeCD2Radio->set_sensitive(false);
@@ -189,6 +190,30 @@ void mainWindow::printValues() {
     cout << " NumOn?: " << limitNumberRadio->get_active() << endl;
     cout << " Size: " << this->getSize() << endl;
     cout << " NumSongs: " << numSongsSpinButton->get_value_as_int() << endl;
-//    cout << " Pretend: " << pretendCheckBox->get_active() << endl;
     cout << " Cram: " << cramCheckBox->get_active() << endl;
+}
+
+string mainWindow::findPixmap(string pixmap_filename) {
+    string pathName;
+    struct stat file;
+    int statreturn = 0;
+
+    // look for pixmap in the following places...
+    string locations[4] = { "", // Current working directory
+        "pixmaps/",
+        "/usr/share/pixmaps/imfavorites/",
+        "/usr/share/pixmaps/"
+        };
+
+    for(int i = 0; i < 4; i++) {
+        pathName = locations[i].append(pixmap_filename);
+
+        statreturn = stat(pathName.c_str(),&file);
+        // Return the full path if the file exists.
+        if (S_ISREG(file.st_mode)) return pathName;
+
+    }
+
+    cerr << "Could not find " << pixmap_filename << endl;
+    return pixmap_filename;
 }
