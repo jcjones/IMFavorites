@@ -23,8 +23,6 @@
 
 #include "mainWindow.h"
 
-#undef ENABLE_NLS
-
 mainWindow *mainWindow;
 
 int main(int argc, char **argv)

@@ -2,7 +2,7 @@
 # using glademm V2.0.0.1
 
 AC_INIT(src/imfavorites.cc)
-AM_INIT_AUTOMAKE(imfavorites, 1.0)
+AM_INIT_AUTOMAKE(imfavorites, 1.1)
 AM_CONFIG_HEADER(config.h)
 
 AC_ISC_POSIX

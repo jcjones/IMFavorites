@@ -1,3 +1,7 @@
+Version 1.1 - 28 April 2004
+    * May have fixed an odd GTKMM problem involving the PixBuf loader.
+    * Re-enabled Gettext support.
+
 Version 1.0 - 23 April 2004
     * Added configure-time selection of whether to build gimfavorites
       or not.

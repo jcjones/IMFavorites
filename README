@@ -9,12 +9,40 @@ them to a place of your choice. Read on...
 IMMS Website:           http://www.luminal.org/wiki/index.php/IMMS
 IMFavorites Website:    http://imfavorites.sourceforge.net/
 
---------------------------------------------------------------------------------The Main Point:
+--------------------------------------------------------------------------------
+The Main Point:
 --------------------------------------------------------------------------------                                                                                
-Run the GTK version by running ./gimfavorites then just point and click,
-or use the console version. For the console version, get a list of command
-line options by running imfavorites -? . More detail on what this program
-does follows below.
+Run the GTK version by executing gimfavorites, then just point and click.
+
+		 -- or use the console version --
+
+For the console version, get a list of command line options by running 
+imfavorites -? . 
+
+More detail on what this program does follows below.
+
+--------------------------------------------------------------------------------
+Dependencies:
+--------------------------------------------------------------------------------
+
+	glibc
+	IMMS 
+	SQLite
+	GTKMM 2.0+	(optional)
+	TagLib		(optional)
+
+--------------------------------------------------------------------------------
+Installation:
+--------------------------------------------------------------------------------
+
+	./configure
+	make all
+	 or
+	make imfavorites (for the console)
+	 or
+	make gimfavorites (for the GTK2 version)
+	 and
+	make install (to install!)
 
 --------------------------------------------------------------------------------
 What the?:
@@ -70,11 +98,24 @@ automagically! So you get a directory tree like your mp3s directory for
 your ease of browsing.
 
 --------------------------------------------------------------------------------
-GTK2 Frontend (gimfavorites)
+GTK2 Frontend (gimfavorites):
 --------------------------------------------------------------------------------
 
 Just point and click. The algorithms are all the same as the above, but it's
 pretty.
+
+--------------------------------------------------------------------------------
+FAQ:
+--------------------------------------------------------------------------------
+
+Q: How do I stop these warnings from TagLib like "MPEG::Header::parse() -- Invalid sample rate" ?
+
+A: If you get warnings from TagLib regarding bad MPEG headers and similar things while limiting on collection length, it is because your version of TagLib has debug output enabled. To disable this output, you must recompile TagLib after configuring it with the --disable-debug option:
+
+       ./configure --disable-debug
+       make install
+
+This isn't necessary under most circumstances, but the debug output does bug some people and may upset some scripts using the command line imfavorites.
 
 --------------------------------------------------------------------------------
 Aknowledgements:
