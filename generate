@@ -1,0 +1,2 @@
+#!/bin/sh
+glade-- imfavorites.glade --header-suffix .h

@@ -1,0 +1,6 @@
+# List of source files containing translatable strings.
+./src/imfavorites.cc
+./src/mainWindow_glade.cc
+./src/mainWindow.cc
+./src/fileSelection_glade.cc
+./src/fileSelection.cc

@@ -1,0 +1,82 @@
+ IMMS Magical Favorites Collector
+    a useful tool for filling CDs/DVDs/Mp3 players with
+    what IMMS already knows you like.
+
+IMFavorites queries the Intelligent Multimedia Management System database
+kept on your system by IMMS to figure out your favorite songs, then symlinks
+them to a place of your choice. Read on...
+
+IMMS Website:           http://www.luminal.org/wiki/index.php/IMMS
+IMFavorites Website:    http://www.cise.ufl.edu/~jcjones/src/
+
+--------------------------------------------------------------------------------
+What the?:
+--------------------------------------------------------------------------------
+
+If you've used IMMS for more than a few days, it's already gotten a decent idea
+of what kind of music you like and what kind of music you do not like. That
+information is stored within its database, dripping with desire to be useful.
+This program simply uses that information to find your favorite songs (as IMMS
+knows them), and then do the hard work of compiling a CD, DVD, Mp3 player full
+of your favorites for you.
+
+What happens is this:
+ * IMFavorites accesses the IMMS database in ~/.imms/imms.db
+ * IMFavorites gets a list of your favorite songs in order
+ * Then one by one symbolic links are made from your songs
+   to a directory you specify as a target.
+ * This repeats until it links your favorite N songs, or until
+   it links your favorite X megabytes of music!
+
+Thus you can get your top 10 songs linked to a directory of your choice, or
+your favorite 700 megs of songs for a mp3 CD, or even your favorite 4.7 GB
+of songs for a mp3 DVD.
+
+IMFavorites even preserves the pathnames of your painstakingly organized files.
+But smartly. An example:
+
+My music is all stored in /mnt/mp3s/, in subdirectories. Let's take one of my
+songs as an example:
+
+    /mnt/mp3s/Classical/Wagner-das Ring/01 - Entrance of the gods.mp3
+
+IMFavorites will automatically determine that "/mnt/mp3s" is the subdirectory
+that contains all your music, and then:
+  * "/mnt/mp3s/" is subtracted from the full path of the file
+  * the remaining portion is used as the location of the file in your target
+    directory.
+
+So, if you have the following command:
+
+    imfavorites ~/mp3s/favorites/
+
+then
+
+    /mnt/mp3s/Classical/Wagner-das Ring/01-Entrance of the gods.mp3
+
+will be symbolically linked to
+
+    ~/mp3s/favorites/Classical/Wagner-das Ring/01-Entrance of the gods.mp3
+
+automagically! So you get a directory tree like your mp3s directory for your ease
+of browsing.
+
+--------------------------------------------------------------------------------
+Mask Overriding:
+--------------------------------------------------------------------------------
+
+If the mask-determining algorithm gets confused (probably because you have
+music in a whole host of directories spread across your filesystem), you can
+override the algorithm by specifying --mask PATH on the command line.
+
+--------------------------------------------------------------------------------
+Aknowledgements:
+--------------------------------------------------------------------------------
+
+
+    Michael Grigoriev   <mag@luminal.org>
+        for writing IMMS to begin with!
+    Brad Appleton       <bradapp@enteract.com>
+        for the Options library:
+        (http://www.cmcrossroads.com/bradapp/ftp/src/libs/C++/Options.html)
+

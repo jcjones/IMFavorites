@@ -1,0 +1,28 @@
+Version 0.4 (1.0 RC1) - XX April 2004
+    * Split the UI from the engine
+    * Added a GTK2 user interface
+    * Made the GTK2 UI follow the GNOME Human Interface Guidelines
+
+Version 0.3 - 24 March 2004
+    * Major speed improvements. (~432.5 times faster)
+    * Added the --list option.
+    * Moved "target" to being a mandatory PATH statement at the end of the
+      option list.
+    * Fix for paths without a trailing /
+    * Usage cleanups
+    * Added the --cram option to keep trying to fit subsequent music files
+      into
+      remaining space until we get tired. :)
+    * Fixed support for --maxsize parameters greater than 4.2 GB (moved to
+      64-bit unsigned long long numbers. That'll fix those overflows!).
+    * Made --mask an optional parameter with the addition of a auto-mask-
+      determining algorithm
+
+    (Kudos to Mag, the author of IMMS, for most of these suggestions!)
+
+Version 0.2 - 22 March 2004
+    * Added --cd, --dvd, --help, and --version options.
+    * First published release.
+
+Version 0.1 - 21 March 2004
+    * The Beginning.
