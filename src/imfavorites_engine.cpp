@@ -507,6 +507,14 @@ long imfavorites_engine::getTargetCollectedFiles() {
     return maxNum;
 }
 
+unsigned long imfavorites_engine::getCollectedLength() {
+    return collectedLength;
+}
+
+unsigned long imfavorites_engine::getTargetLength() {
+    return targetLength;
+}
+
 int imfavorites_engine::isLimitedBySize() {
     return (limitSetting==0);
 }

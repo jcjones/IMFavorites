@@ -38,6 +38,7 @@ private:
         void on_limitRadio_toggled();
         void on_numSongsSpinButton_changed();
         void on_limitNumberRadio_toggled();
+        void on_limitLengthRadio_toggled();
         void on_cramCheckBox_toggled();
         void on_pretendCheckBox_toggled();
         void on_startButton_activate();

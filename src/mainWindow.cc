@@ -17,6 +17,7 @@
 #include <gtkmm/messagedialog.h>
 
 #define cd_image "cdrom_umount.svgz"
+#define cdaudio_image "cdaudio_umount.svgz"
 #define dvd_image "dvd_umount.svgz"
 #define number_image "poundsign.svgz"
 #define portableaudio_image "cdrom_umount.svgz"
@@ -120,11 +121,15 @@ void mainWindow::on_limitRadio_toggled()
     else image1->set(this->findPixmap(cd_image));
 
     numSongsSpinButton->set_sensitive(false);
+
     sizeCDRadio->set_sensitive(true);
     sizeCD2Radio->set_sensitive(true);
     sizeOtherRadio->set_sensitive(true);
     sizeDVDRadio->set_sensitive(true);
     cramCheckBox->set_sensitive(true);
+
+    minutesSpinButton->set_sensitive(false);
+    secondsSpinButton->set_sensitive(false);
 }
 
 void mainWindow::on_numSongsSpinButton_changed()
@@ -135,15 +140,35 @@ void mainWindow::on_limitNumberRadio_toggled()
 {
     image1->set(this->findPixmap(number_image));
     numSongsSpinButton->set_sensitive(true);
+
     sizeCDRadio->set_sensitive(false);
     sizeCD2Radio->set_sensitive(false);
     sizeOtherRadio->set_sensitive(false);
     sizeDVDRadio->set_sensitive(false);
     cramCheckBox->set_sensitive(false);
+
+    minutesSpinButton->set_sensitive(false);
+    secondsSpinButton->set_sensitive(false);
+}
+
+void mainWindow::on_limitLengthRadio_toggled()
+{
+    image1->set(this->findPixmap(cdaudio_image));
+
+    numSongsSpinButton->set_sensitive(false);
+
+    sizeCDRadio->set_sensitive(false);
+    sizeCD2Radio->set_sensitive(false);
+    sizeOtherRadio->set_sensitive(false);
+    sizeDVDRadio->set_sensitive(false);
+    cramCheckBox->set_sensitive(true);
+
+    minutesSpinButton->set_sensitive(true);
+    secondsSpinButton->set_sensitive(true);
 }
 
 void mainWindow::on_cramCheckBox_toggled()
-{  
+{
 }
 
 void mainWindow::on_startButton_activate()
@@ -157,8 +182,11 @@ void mainWindow::on_startButton_activate()
 
     if (limitSizeRadio->get_active())
         program->setTargetSize(this->getSize());
-    else
+    else if (limitNumberRadio->get_active())
         program->setNumFiles(numSongsSpinButton->get_value_as_int());
+    else
+        program->setTargetLength(minutesSpinButton->get_value_as_int()*60+
+            secondsSpinButton->get_value_as_int());
 
     program->setPretend(0);
     program->setCram(cramCheckBox->get_active());
@@ -176,8 +204,11 @@ void mainWindow::on_startButton_activate()
     if (limitSizeRadio->get_active()) {
         sprintf(num_string, "%d", program->getCollectedSizeMB());
         doneMessage.append(num_string).append(" MB of");
-    } else {
+    } else if (limitNumberRadio->get_active()) {
         sprintf(num_string, "%d", program->getCollectedFiles());
+        doneMessage.append(num_string);
+    } else {
+        sprintf(num_string, "%d minutes, %d seconds of", program->getCollectedLength()/60, program->getCollectedLength()%60);
         doneMessage.append(num_string);
     }
 

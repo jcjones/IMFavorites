@@ -73,8 +73,6 @@ fi
 
 if test "x$with_taglib" = "xno"; then
     AC_MSG_ERROR([TagLib Not Found. Song length limiting will not work.])
-else
-    AC_DEFINE([TAGLIB_IS_PRESENT],,[Define to 1 if TagLib is installed])
 fi
 
 

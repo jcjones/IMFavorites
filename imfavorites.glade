@@ -85,7 +85,7 @@ your Target Directory.</property>
 	  <child>
 	    <widget class="GtkTable" id="table2">
 	      <property name="visible">True</property>
-	      <property name="n_rows">15</property>
+	      <property name="n_rows">17</property>
 	      <property name="n_columns">4</property>
 	      <property name="homogeneous">False</property>
 	      <property name="row_spacing">0</property>
@@ -213,32 +213,6 @@ your Target Directory.</property>
 		  <property name="right_attach">4</property>
 		  <property name="top_attach">8</property>
 		  <property name="bottom_attach">9</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCheckButton" id="cramCheckBox">
-		  <property name="border_width">4</property>
-		  <property agent="glademm" name="cxx_visibility">protected</property>
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Cram some small files into leftover space; with this enabled, some less-liked but shorter songs will be added to fill up remaining space in the collection</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">C_ram in as many songs
-as possible</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="active">True</property>
-		  <property name="inconsistent">False</property>
-		  <property name="draw_indicator">True</property>
-		  <signal name="toggled" handler="on_cramCheckBox_toggled" last_modification_time="Tue, 30 Mar 2004 13:18:33 GMT"/>
-		</widget>
-		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">4</property>
-		  <property name="top_attach">10</property>
-		  <property name="bottom_attach">11</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>
@@ -478,6 +452,154 @@ as possible</property>
 		  <property name="right_attach">1</property>
 		  <property name="top_attach">3</property>
 		  <property name="bottom_attach">4</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkRadioButton" id="limitLengthRadio">
+		  <property agent="glademm" name="cxx_visibility">protected</property>
+		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">If you want to fit everything onto a music CD or its like, choose this option</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Fit collection to a _length</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="active">False</property>
+		  <property name="inconsistent">False</property>
+		  <property name="draw_indicator">True</property>
+		  <property name="group">limitSizeRadio</property>
+		  <signal name="toggled" handler="on_limitLengthRadio_toggled" last_modification_time="Fri, 23 Apr 2004 18:30:08 GMT"/>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">4</property>
+		  <property name="top_attach">10</property>
+		  <property name="bottom_attach">11</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkHBox" id="hbox6">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkSpinButton" id="minutesSpinButton">
+		      <property agent="glademm" name="cxx_visibility">protected</property>
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="climb_rate">1</property>
+		      <property name="digits">0</property>
+		      <property name="numeric">True</property>
+		      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
+		      <property name="snap_to_ticks">False</property>
+		      <property name="wrap">False</property>
+		      <property name="adjustment">80 0 9999 1 10 10</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label20">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes"> minutes </property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkSpinButton" id="secondsSpinButton">
+		      <property agent="glademm" name="cxx_visibility">protected</property>
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="climb_rate">1</property>
+		      <property name="digits">0</property>
+		      <property name="numeric">True</property>
+		      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
+		      <property name="snap_to_ticks">False</property>
+		      <property name="wrap">False</property>
+		      <property name="adjustment">0 0 59 1 10 10</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label21">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes"> seconds </property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">4</property>
+		  <property name="top_attach">11</property>
+		  <property name="bottom_attach">12</property>
+		  <property name="x_options">fill</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkCheckButton" id="cramCheckBox">
+		  <property name="border_width">4</property>
+		  <property agent="glademm" name="cxx_visibility">protected</property>
+		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Cram some small files into leftover space; with this enabled, some less-liked but shorter songs will be added to fill up remaining space in the collection</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">C_ram in as many songs
+as possible</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="active">True</property>
+		  <property name="inconsistent">False</property>
+		  <property name="draw_indicator">True</property>
+		  <signal name="toggled" handler="on_cramCheckBox_toggled" last_modification_time="Tue, 30 Mar 2004 13:18:33 GMT"/>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">4</property>
+		  <property name="top_attach">15</property>
+		  <property name="bottom_attach">16</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>

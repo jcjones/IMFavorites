@@ -25,8 +25,9 @@ What happens is this:
  * IMFavorites gets a list of your favorite songs in order
  * Then one by one symbolic links are made from your songs
    to a directory you specify as a target.
- * This repeats until it links your favorite N songs, or until
-   it links your favorite X megabytes of music!
+ * This repeats until it links your favorite N songs, until it
+   links M minutes of entertainment, or until it links your 
+   favorite X megabytes of music!
 
 Thus you can get your top 10 songs linked to a directory of your choice, or
 your favorite 700 megs of songs for a mp3 CD, or even your favorite 4.7 GB

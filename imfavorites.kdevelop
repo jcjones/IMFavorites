@@ -9,22 +9,24 @@
     <ignoreparts/>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description/>
+    <description></description>
     <secondaryLanguages/>
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>src/gimfavorites</activetarget>
+      <activetarget>src/imfavorites</activetarget>
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram/>
+      <mainprogram></mainprogram>
       <directoryradio>build</directoryradio>
       <runarguments>
-        <imfavorites/>
+        <imfavorites></imfavorites>
+        <gimfavorites></gimfavorites>
       </runarguments>
       <customdirectory>/</customdirectory>
-      <programargs/>
+      <programargs>-t 10:20 ~/mp3/time/
+</programargs>
       <terminal>false</terminal>
       <autocompile>true</autocompile>
       <envvars/>
@@ -54,17 +56,17 @@
       <abortonerror>false</abortonerror>
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
-      <makebin/>
+      <makebin></makebin>
     </make>
   </kdevautoproject>
   <kdevdebugger>
     <general>
       <dbgshell>libtool</dbgshell>
-      <programargs/>
-      <gdbpath/>
-      <configGdbScript/>
-      <runShellScript/>
-      <runGdbScript/>
+      <programargs></programargs>
+      <gdbpath></gdbpath>
+      <configGdbScript></configGdbScript>
+      <runShellScript></runShellScript>
+      <runGdbScript></runGdbScript>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
