@@ -1,3 +1,6 @@
+Version 1.0 - XX April 2004
+
+
 Version 0.4 (1.0 RC1) - 17 April 2004
     * Split the UI from the engine
     * Added a GTK2 user interface (gimfavorites)
@@ -30,6 +33,3 @@ Version 0.2 - 22 March 2004
 
 Version 0.1 - 21 March 2004
     * The Beginning.
-
-2004/4/14 22:13:21 EDT
-	update files from .glade file

@@ -2,7 +2,7 @@
 # using glademm V2.0.0.1
 
 AC_INIT(src/imfavorites.cc)
-AM_INIT_AUTOMAKE(imfavorites, 0.4)
+AM_INIT_AUTOMAKE(imfavorites, 1.0)
 AM_CONFIG_HEADER(config.h)
 
 AC_ISC_POSIX
@@ -14,6 +14,12 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 AM_PROG_LIBTOOL
 
+
+AC_ARG_WITH(gtkmm,
+[  --with-gtkmm          build GTK GUI],, [with_gtkmm=yes])
+AC_ARG_WITH(gtkmm,
+[  --without-gtkmm       do not build GTK GUI],, [with_gtkmm=no])
+
 dnl *************************************************
 dnl gettext support
 dnl *************************************************
@@ -23,8 +29,8 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 
 dnl Add the languages which your application supports here.
-ALL_LINGUAS=""
-AM_GNU_GETTEXT
+dnl ALL_LINGUAS=""
+dnl AM_GNU_GETTEXT
 
 dnl Set PACKAGE_LOCALE_DIR in config.h.
 if test "x${prefix}" = "xNONE"; then
@@ -35,14 +41,31 @@ fi
 
 AC_LANG_CPLUSPLUS
 
-PKG_CHECK_MODULES(GTKMM,[gtkmm-2.0 >= 2.2.0])
-AC_SUBST(GTKMM_CFLAGS)
-AC_SUBST(GTKMM_LIBS)
+dnl Check for GTKMM
+
+if test "x$with_gtkmm" = "xyes"; then
+        PKG_CHECK_MODULES(GTKMM,[gtkmm-2.0 >= 2.2.0],AC_DEFINE([GTKMM_IS_PRESENT],,[Define to 1 if GTKMM is installed]),
+        AC_MSG_ERROR([GTKMM-2.X Not Found. Use --without-gtkmm  to build only the console IMFavorites.]))
+
+        AC_SUBST(GTKMM_CFLAGS)
+        AC_SUBST(GTKMM_LIBS)
+fi
+
+dnl Check for SQLite
 
 AC_CHECK_LIB(sqlite, sqlite_open,, [with_sqlite=no])
 AC_CHECK_HEADERS(sqlite.h,, [with_sqlite=no])
+
 if test "$with_sqlite" = "no"; then
-   AC_MSG_ERROR([sqlite required and missing.])
+        AC_MSG_ERROR([sqlite required and missing.])
 fi
 
-AC_OUTPUT(Makefile src/Makefile po/Makefile.in m4/Makefile pixmaps/Makefile)
+dnl Make Makefiles
+AM_CONDITIONAL(BUILD_GIMFAVORITES, test "x$with_gtkmm" = "xyes")
+
+AC_OUTPUT(Makefile
+        src/Makefile \
+        po/Makefile.in \
+        m4/Makefile \
+        pixmaps/Makefile \
+        tools/Makefile)

@@ -1,9 +1,8 @@
-# generated 2004/3/30 9:46:59 EST by pug@resmiranda.berthall.com.(none)
-# using glademm V2.0.0.1
-#
-# newer (non customized) versions of this file go to Makefile.am_new
-
-bin_PROGRAMS = imfavorites gimfavorites
+if BUILD_GIMFAVORITES 
+    bin_PROGRAMS = imfavorites gimfavorites
+else
+    bin_PROGRAMS = imfavorites
+endif
 
 imfavorites_SOURCES = imfavorites.cc imfavorites_engine.cpp sqlite_db.cpp options.cpp
 
