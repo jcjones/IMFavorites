@@ -83,8 +83,6 @@ void mainWindow::on_browseButton_activate()
         pathName = pathName.append("/");
     }
 
-    cerr << pathName << endl;
-
     if (pathName.find_last_of("/") != pathName.length() ) {
         pathName.erase(pathName.find_last_of("/")+1,pathName.length());
     }
@@ -149,7 +147,7 @@ void mainWindow::on_cramCheckBox_toggled()
 
 void mainWindow::on_startButton_activate()
 {
-    this->printValues();
+    //this->printValues();
 
     progressbar1->set_fraction(0);
     progressbar1->set_text("Running...");

@@ -21,6 +21,7 @@ sqlite_db::sqlite_db()
     int queryDone = 0;
     pathToDB = "";
     vm = 0;
+    p_db = 0;
 }
 
 

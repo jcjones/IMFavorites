@@ -85,11 +85,13 @@ public:
 
     void    printSummary(void);
     void    printOutSummary(void);
+    string  getVersion();
     unsigned long   getCollectedSizeMB();
     unsigned long   getTargetSizeMB();
     long    getCollectedFiles();
     long    getTargetCollectedFiles();
     int     isLimitedByNumber();
+    int     isReady();
 
     void    setCallback ( imCallback c ) { cb = c ;    }
     imCallback  getCallback ( void ) const   { return cb ; }
@@ -99,5 +101,6 @@ public:
 };
 
 static void default_progress_cb (imfavorites_engine *, int Param);
+
 
 #endif

@@ -11,24 +11,30 @@
 //
 #include "imfavorites_engine.h"
 
-imfavorites_engine::imfavorites_engine() {
-    maxNum = 99999;
+#define IMFAVORITES_VERSION "0.4, 10 April 2004"
 
-    numFiles = 0; /* number of files linked */
-    numCrams = 0; /* number of successful crams made */
-    cram = 0;     /* cram is 0 when disabled,
-                     >0 when enabled, and
-                     >1 when actively cramming. */
-    verbose = 0;  /* verbosity level (bigger is more verbose) */
+imfavorites_engine::imfavorites_engine() {
+
+    // Variable init
+    numFiles    = 0; // number of files linked
+    numCrams    = 0; // number of successful crams made
+    cram        = 0; // cram is 0 when disabled,
+                     //  >0 when enabled, and
+                     //  >1 when actively cramming.
+    verbose     = 0; // verbosity level (bigger is more verbose)
 
     collectedSize = 0;
 
-    symTargetDir = "";           /* The actual directory where we place links */
-    mainMp3MaskDirectory = "";   /* The mask to subtract from filenames */
+    // Init through helpers
+    this->setNumFiles(99999);
+    this->setTargetSize(650);
 
+    // Set paths' defaults
+    symTargetDir = "";           // The actual directory where we place links
+    mainMp3MaskDirectory = "";   // The mask to subtract from filenames
+
+    // Initial callback (can be overridden)
     this->setCallback(default_progress_cb);
-
-    setTargetSize(maxSize);
 }
 
 imfavorites_engine::~imfavorites_engine() {
@@ -143,7 +149,7 @@ unsigned long imfavorites_engine::getFilesize(const char *FileName)
 }
 
 void imfavorites_engine::printOutSummary(void) {
-    cout << "Done!";
+    cout << endl << "Done!";
 
     if (maxNumSet) {
     cout << "\t Filled " << collectedSize << " bytes (" << collectedSize / 1048576 << " MB)" << endl;
@@ -186,14 +192,10 @@ int imfavorites_engine::runFavorites(sqlite_db *p_db) {
     char maxNum_s[64];
     sprintf(maxNum_s, "%d", maxNum);
 
-    /* Find the mask directory */
-    mainMp3MaskDirectory = this->findMask(p_db);
-
-    this->printSummary();
+    mainMp3MaskDirectory = this->findMask(p_db); // The mask to subtract from filenames
 
     if (!pretend)  {
         if ( this->makeDirectory(symTargetDir) < 1 ) return 0;
-
     }
 
 
@@ -409,13 +411,11 @@ string imfavorites_engine::findMask(sqlite_db *DB) {
 }
 
 bool imfavorites_engine::run() {
-    int ret = 0, errors = 0, nrecs = 0;
-    char *errmsg = 0;
-    struct stat dir;
+
     string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
 
-
-    cout << "Opening database..." << endl;
+    // Start the DB
+    if (verbose) cout << "Opening database..." << endl;
 
     sqlite_db* p_db = new sqlite_db();
 
@@ -423,12 +423,6 @@ bool imfavorites_engine::run() {
 
     if (!p_db->isOpen()) cerr << "Failed to open DB at " <<  pathToDB << endl;
     else this->runFavorites(p_db);
-
-
-    cout << endl;
-
-    /* Print Statistics */
-    if (verbose) this->printOutSummary();
 
     return 1;
 }
@@ -451,6 +445,20 @@ long imfavorites_engine::getTargetCollectedFiles() {
 
 int imfavorites_engine::isLimitedByNumber() {
     return maxNumSet;
+}
+
+int imfavorites_engine::isReady() {
+    // We are ready when one of these conditions is true:
+    // We've going to a maxNumber of songs and that's >0
+    // We're going to a maxSize of songs and that's >0
+    // AND
+    // We're either pretending, or we have a symTargetDir set
+    return ( (maxNumSet && maxNum >0) || (!maxNumSet && maxSize > 0) ) &&
+           (symTargetDir.length() > 0 || pretend);
+}
+
+string imfavorites_engine::getVersion() {
+    return IMFAVORITES_VERSION;
 }
 
 static void default_progress_cb (imfavorites_engine * engine, int Param) {
