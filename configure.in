@@ -45,4 +45,4 @@ if test "$with_sqlite" = "no"; then
    AC_MSG_ERROR([sqlite required and missing.])
 fi
 
-AC_OUTPUT(Makefile src/Makefile )
+AC_OUTPUT(Makefile src/Makefile po/Makefile.in m4/Makefile pixmaps/Makefile)

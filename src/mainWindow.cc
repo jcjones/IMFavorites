@@ -197,14 +197,16 @@ string mainWindow::findPixmap(string pixmap_filename) {
     int statreturn = 0;
 
     // look for pixmap in the following places...
-    string locations[4] = { "", // Current working directory
+    string locations[6] = { "", // Current working directory
         "pixmaps/",
         "/usr/share/pixmaps/imfavorites/",
-        "/usr/share/pixmaps/"
+        "/usr/share/pixmaps/",
+        "/usr/local/share/pixmaps/imfavorites/",
+        "/usr/local/share/pixmaps/"
         };
 
-    for(int i = 0; i < 4; i++) {
-        pathName = locations[i].append(pixmap_filename);
+    for(int i = 0; i < 6; i++) {
+        pathName = string(locations[i]).append(pixmap_filename);
 
         statreturn = stat(pathName.c_str(),&file);
         // Return the full path if the file exists.
