@@ -1,4 +1,4 @@
-Version 1.0 - XX April 2004
+Version 1.0 - 23 April 2004
     * Added configure-time selection of whether to build gimfavorites
       or not.
     * Added TagLib as a optional dependency to...
@@ -41,3 +41,9 @@ Version 0.2 - 22 March 2004
 
 Version 0.1 - 21 March 2004
     * The Beginning.
+
+2004/4/25 23:16:36 EDT
+	update files from .glade file
+
+2004/4/25 23:19:24 EDT
+	update files from .glade file

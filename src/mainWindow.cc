@@ -44,6 +44,7 @@ static void progress_callback(imfavorites_engine* engine, int songs) {
 
 mainWindow::mainWindow() {
     directoryEntry->set_text(string(getenv("HOME")).append("/favorite_music/"));
+    image1->set(this->findPixmap(cd_image));
 
 #ifndef HAVE_TAGLIB_TAGLIB_H
     limitLengthRadio->set_sensitive(false);

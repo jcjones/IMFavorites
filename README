@@ -9,6 +9,13 @@ them to a place of your choice. Read on...
 IMMS Website:           http://www.luminal.org/wiki/index.php/IMMS
 IMFavorites Website:    http://imfavorites.sourceforge.net/
 
+--------------------------------------------------------------------------------The Main Point:
+--------------------------------------------------------------------------------                                                                                
+Run the GTK version by running ./gimfavorites then just point and click,
+or use the console version. For the console version, get a list of command
+line options by running imfavorites -? . More detail on what this program
+does follows below.
+
 --------------------------------------------------------------------------------
 What the?:
 --------------------------------------------------------------------------------
@@ -59,8 +66,8 @@ will be symbolically linked to
 
     ~/mp3s/favorites/Classical/Wagner-das Ring/01 - Das Rheingold.mp3
 
-automagically! So you get a directory tree like your mp3s directory for your ease
-of browsing.
+automagically! So you get a directory tree like your mp3s directory for 
+your ease of browsing.
 
 --------------------------------------------------------------------------------
 GTK2 Frontend (gimfavorites)
@@ -79,6 +86,9 @@ Aknowledgements:
     Brad Appleton       <bradapp@enteract.com>
         for the Options library:
         (http://www.cmcrossroads.com/bradapp/ftp/src/libs/C++/Options.html)
+    Scott Wheeler       <wheeler@kde.org>
+        for TagLib:
+        (http://developer.kde.org/~wheeler/taglib.html)
     Everaldo Coelho     <teveraldo@everaldo.com>
         for the CD and DVD icons which come from CrystalSVG
         (http://www.everaldo.com/)

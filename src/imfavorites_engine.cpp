@@ -11,7 +11,7 @@
 //
 #include "imfavorites_engine.h"
 
-#define IMFAVORITES_VERSION "0.4, 17 April 2004"
+#define IMFAVORITES_VERSION "1.0, 23 April 2004"
 
 imfavorites_engine::imfavorites_engine() {
     string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
@@ -294,7 +294,12 @@ int imfavorites_engine::checkConstraints(void) {
     // Check filesize then see if we're over limit.
     unsigned long size = getFilesize(database->getFieldPChar(1));
     // Check song length...
-    unsigned long length = getFileLength(database->getFieldPChar(1));
+    unsigned long length = 0;
+    if (limitSetting == 2) length=getFileLength(database->getFieldPChar(1));
+
+    // Note: Those lines are split because I don't want TagLib spitting out
+    // errors all the time. Unsplit the above lines when a method to shut
+    // up TagLib is found.
 
     // This also takes care of files that don't
     // exist - their size is 0, so just skip...

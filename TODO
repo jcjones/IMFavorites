@@ -1,4 +1,4 @@
 Remove dependency on GCC (unsigned long long)
 Multithread gimfavorites
-Conditional Compilation
-
+Add menu entries to various desktops
+Shut TagLib's warnings up (eesh!)

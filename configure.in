@@ -16,13 +16,13 @@ AM_PROG_LIBTOOL
 
 
 AC_ARG_WITH(gtkmm,
-[  --with-gtkmm          build GTK GUI],, [with_gtkmm=yes])
+[  --with-gtkmm            build GTK GUI],, [with_gtkmm=yes])
 AC_ARG_WITH(gtkmm,
-[  --without-gtkmm       do not build GTK GUI],, [with_gtkmm=no])
+[  --without-gtkmm         do not build GTK GUI],, [with_gtkmm=no])
 AC_ARG_WITH(taglib,
-[  --with-taglib         use TagLib],, [with_taglib=yes])
+[  --with-taglib           use TagLib],, [with_taglib=yes])
 AC_ARG_WITH(taglib,
-[  --without-taglib      do not use TagLib (disable length limiting)],, [with_taglib=no])
+[  --without-taglib        do not use TagLib (disable length limiting)],, [with_taglib=no])
 
 dnl *************************************************
 dnl gettext support
