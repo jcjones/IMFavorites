@@ -31,16 +31,16 @@ typedef void (*imCallback)(class imfavorites_engine *, int delta) ;
 
 class imfavorites_engine{
 private:
-    int     numFiles; /* number of files linked */
-    int     numCrams; /* number of successful crams made */
-    int     maxNum;   /* number of files to get */
+    int     numFiles;  /* number of files linked */
+    int     numCrams;  /* number of successful crams made */
+    int     maxNum;    /* number of files to get */
     int     maxNumSet; /* True if we're going by number, false if going by size */
     int     maxSize;
 
-    int     cram;     /* cram is 0 when disabled,
-                     >0 when enabled, and
-                     >1 when actively cramming. */
-    int     verbose;  /* verbosity level (bigger is more verbose) */
+    int     cram;      /* cram is 0 when disabled,
+                          >0 when enabled, and
+                          >1 when actively cramming. */
+    int     verbose;   /* verbosity level (bigger is more verbose) */
     int     pretend;
 
     /* I feel special.. I need 64 bit computing for this!
@@ -53,8 +53,8 @@ private:
     string  mainMp3MaskDirectory;   /* The mask to subtract from filenames */
 
     /* Algorithm to find and return the optimum mask */
-    string  findMask(sqlite_db*);
-    int     checkConstraints(sqlite_db*);
+    string  findMask();
+    int     checkConstraints(void);
 
     /* Return the filesize in bytes of a file ... this is long, but for huge songs
        it'd need to be long long. ;) */
@@ -63,11 +63,12 @@ private:
     int     makeDirectory(string);
     int     makeTargetDirectory(string);
 
-    int     symLinkFavorites(sqlite_db*);
-    int     printFavorites(sqlite_db*);
-    int     runFavorites(sqlite_db*);
+    int     symLinkFavorites(void);
+    int     printFavorites(void);
+    int     runFavorites(void);
 
     imCallback  cb;
+    sqlite_db*  database;
 
 public:
     imfavorites_engine();
@@ -85,17 +86,17 @@ public:
 
     void    printSummary(void);
     void    printOutSummary(void);
-    string  getVersion();
-    unsigned long   getCollectedSizeMB();
-    unsigned long   getTargetSizeMB();
-    long    getCollectedFiles();
-    long    getTargetCollectedFiles();
-    int     isLimitedByNumber();
-    int     isReady();
+    string  getVersion(void);
+    unsigned long   getCollectedSizeMB(void);
+    unsigned long   getTargetSizeMB(void);
+    long    getCollectedFiles(void);
+    long    getTargetCollectedFiles(void);
+    int     isLimitedByNumber(void);
+    int     isReady(void);
 
-    void    setCallback ( imCallback c ) { cb = c ;    }
-    imCallback  getCallback ( void ) const   { return cb ; }
-    void    invokeCallback ( int delta ) { if ( cb != NULL ) (*cb)(this, delta) ; }
+    void    setCallback (imCallback c) { cb = c ;    }
+    imCallback  getCallback (void) const   { return cb ; }
+    void    invokeCallback (int delta) { if ( cb != NULL ) (*cb)(this, delta) ; }
 
 
 };
