@@ -42,6 +42,12 @@ private:
         void on_cramCheckBox_toggled();
         void on_pretendCheckBox_toggled();
         void on_startButton_activate();
+        void on_all1_activate();
+        void on_mp3_activate();
+        void on_ogg_vorbis1_activate();
+        void on_windows_media1_activate();
+        void on_aac1_activate();
+
 
         string findPixmap(string);
         unsigned long getSize();

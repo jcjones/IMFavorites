@@ -119,7 +119,31 @@ void mainWindow::on_sizeDVDRadio_toggled()
 void mainWindow::on_sizeOtherRadio_toggled()
 {
     image1->set(this->findPixmap(portableaudio_image));
+}
 
+void mainWindow::on_all1_activate()
+{
+// Set all tags active
+   mp3->set_active(true);
+   ogg_vorbis1->set_active(true);
+   windows_media1->set_active(true);
+   aac1->set_active(true);
+}
+
+void mainWindow::on_mp3_activate()
+{
+}
+
+void mainWindow::on_ogg_vorbis1_activate()
+{
+}
+
+void mainWindow::on_windows_media1_activate()
+{
+}
+
+void mainWindow::on_aac1_activate()
+{
 }
 
 void mainWindow::on_limitRadio_toggled()
@@ -194,6 +218,26 @@ void mainWindow::on_startButton_activate()
     else
         program->setTargetLength(minutesSpinButton->get_value_as_int()*60+
             secondsSpinButton->get_value_as_int());
+
+    // Determine mask
+    if (mp3->get_active()) {
+        program->setFilenameMask("*.mp3");
+        program->setFilenameMask("*.mp2");
+        program->setFilenameMask("*.mpeg3");
+        program->setFilenameMask("*.mpeg2");
+    }
+    if (ogg_vorbis1->get_active()) {
+        program->setFilenameMask("*.ogg");
+        program->setFilenameMask("*.oggvorbis");      
+    }
+    if (windows_media1->get_active()) {
+        program->setFilenameMask("*.wma");
+    }
+    if (aac1->get_active()) {
+        program->setFilenameMask("*.aac");
+        program->setFilenameMask("*.mp4");
+        program->setFilenameMask("*.m4p");
+    }
 
     program->setPretend(0);
     program->setCram(cramCheckBox->get_active());

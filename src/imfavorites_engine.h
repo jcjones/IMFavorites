@@ -68,7 +68,7 @@ private:
     string  symTargetDir;           /* The actual directory where we place links */
     string  mainMp3MaskDirectory;   /* The mask to subtract from filenames */
 
-    string  filenameMask;           /* The filtering mask for filenames, e.g. *mp3 */
+    vector<string> filenameMask;    /* The filtering mask for filenames, e.g. *mp3 */
 
     /* Algorithm to find and return the optimum mask */
     string  findMask();

@@ -28,8 +28,6 @@ imfavorites_engine::imfavorites_engine() {
     verbose         = 0; // verbosity level (bigger is more verbose)
     minScore        = 100; // Minimum score to allow...
     
-    filenameMask    = "*"; // Mask by which to filter final output
-
     // Init through helpers
     this->setTargetSize(650);
 
@@ -40,7 +38,7 @@ imfavorites_engine::imfavorites_engine() {
     // Initial callback (can be overridden)
     this->setCallback(default_progress_cb);
 
-    this->setFilenameMask(filenameMask);
+    filenameMask.clear();
 
     // Start the DB
     database = new sqlite_db();
@@ -121,7 +119,8 @@ bool imfavorites_engine::setMinScore(int in) {
 bool imfavorites_engine::setFilenameMask(string mask) {
   if (mask == "") return false;
 
-  filenameMask = mask;
+  filenameMask.push_back(mask);
+  
   return true;
 }
 
@@ -262,10 +261,24 @@ int imfavorites_engine::runFavorites(void) {
         if ( this->makeDirectory(symTargetDir) < 1 ) return 0;
     }
 
-
     /* Build initial SQL statement */
-    string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating >= ").append(minScore_s).append(" AND Library.path GLOB \"").append(filenameMask).append("\" ORDER BY Rating.rating DESC ");
+    string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating >= ").append(minScore_s);
     
+    /* Add mask GLOBs */
+    for (int i = 0; i < filenameMask.size(); i++) {
+        string maskBit = filenameMask[i];
+
+        if (i < 1)
+                sql_command = sql_command.append(" AND Library.path GLOB \"");
+        else
+                sql_command = sql_command.append(" OR Library.path GLOB \"");
+
+        sql_command = sql_command.append(maskBit).append("\"");
+    }
+
+
+    sql_command = sql_command.append(" ORDER BY Rating.rating DESC ");
+
     if (limitSetting == 1) {
         sql_command.append("LIMIT ").append(maxNum_s).append(";");
     } else {
@@ -273,6 +286,8 @@ int imfavorites_engine::runFavorites(void) {
     }
 
     /* Go */
+
+    cerr << sql_command << endl;
 
     database->execute(sql_command);
 

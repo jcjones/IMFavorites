@@ -93,7 +93,7 @@ int main(int argc, char **argv)
             break;
         case 'm' :
             if (optarg == NULL)  ++errors;
-            program->setFilenameMask(optarg);
+            program->setFilenameMask(string(optarg));
             break;
         case 't' :
             if (optarg == NULL) {
