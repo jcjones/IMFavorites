@@ -15,13 +15,15 @@
 #include <iostream.h>
 #include <string>
 
+#include "config.h"
+
 #include <sqlite_db.h>
 
-#ifdef TAGLIB_IS_PRESENT
+#ifdef HAVE_TAGLIB_TAGLIB_H
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
 #include <taglib/tfile.h>
-#endif // TAGLIB_IS_PRESENT
+#endif // HAVE_TAGLIB_TAGLIB_H
 
 #include <sys/stat.h>
 #include <sys/types.h>

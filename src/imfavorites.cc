@@ -20,6 +20,8 @@
 
 #include <iostream.h>
 
+#include "config.h"
+
 #include "options.h"
 #include "imfavorites_engine.h"
 
@@ -38,11 +40,14 @@ int main(int argc, char **argv)
     const char * optv[] = {
         "s:maxsize SIZE",
         "n:maxnum NUMBER",
+#ifdef HAVE_TAGLIB_TAGLIB_H
+        "t:time MINUTES:SECONDS",
+#endif // HAVE_TAGLIB_TAGLIB_H
         "\05|cd \b",
         "\06|dvd \b",
         "c|cram \b",
-        "l|list \b",          /* This is such a hack -- to make sure the option looks */
-        "v|verbose", /* like the others, we use an esacped backspace... man I'm bad! */
+        "l|list \b", // This is such a hack -- to make sure the option looks
+        "v|verbose", // like the others, we use an esacped backspace... man I'm bad!
         "?|help",
         " |version",
         NULL
@@ -50,13 +55,17 @@ int main(int argc, char **argv)
 
     Options opts(*argv, optv);
     OptArgvIter iter(--argc, ++argv);
-    opts.ctrls(Options::PARSE_POS); /* the target path argument is "Positional" */
+    opts.ctrls(Options::PARSE_POS); // the target path argument is "Positional"
     const char *optarg, *str = NULL;
     int verbose=0, errors=0, pretend=0;
+    // These are for the length parsing (M:seconds)
+    char *length = NULL, *lengthplusone = NULL;
+    int seconds = 0;
 
     imfavorites_engine* program = new imfavorites_engine();
 
-    /* Parse our options */
+    // Parse our options
+
 
     while( char optchar = opts(iter, optarg) ) {
       switch (optchar) {
@@ -65,7 +74,8 @@ int main(int argc, char **argv)
             program->setTargetSize(atoi(optarg));
             break;
         case '\05' :
-            /* 700 meg CD size - max size is 737280000 bytes. We come up just short of that with this option. */
+            // 700 meg CD size - max size is 737280000 bytes.
+            // We come up just short of that with this option.
             program->setTargetSize(700);
             break;
         case '\06' :
@@ -75,6 +85,28 @@ int main(int argc, char **argv)
         case 'n' :
             if (optarg == NULL)  ++errors;
             program->setNumFiles(atoi(optarg));
+            break;
+        case 't' :
+            if (optarg == NULL) {
+                ++errors;
+                break;
+            }
+            
+            length = strchr(optarg, ':');
+            lengthplusone = strchr(optarg, ':')+1;
+
+            if (length == NULL) {
+                // if there's no colon, don't continue and get bad results
+                ++errors;
+                break;
+            }
+
+            length = '\0'; // Axe the colon...
+
+            seconds = atoi(optarg)*60;  // Get the pre-colon half
+            seconds += atoi(lengthplusone);        // get the rest...
+
+            program->setTargetLength(seconds);
             break;
         case 'v' :
             ++verbose;
@@ -102,6 +134,9 @@ int main(int argc, char **argv)
             cout << "\t   --dvd\t\t Set the size to 4.7 GB (120-min DVD)" << endl;
             cout << "\t-c|--cram\t\t Cram some small files into leftover space." << endl;
             cout << "\t-n|--maxnum\t<num>\t Maximum number of songs to copy" << endl << endl;
+#ifdef HAVE_TAGLIB_TAGLIB_H
+            cout << "\t-t|--time\t<m>:<s>\t Length of resulting collection" << endl << endl;
+#endif // HAVE_TAGLIB_TAGLIB_H
 
             cout << "Location Options: ()" << endl;
             cout << "\tTARGET_PATH\t\t Path in which to put all the symbolic links" << endl;

@@ -66,13 +66,14 @@ bool imfavorites_engine::setNumFiles(long in) {
 }
 
 bool imfavorites_engine::setTargetLength(unsigned long length ) {
-#ifdef TAGLIB_IS_PRESENT
+#ifdef HAVE_TAGLIB_TAGLIB_H
     limitSetting = 2;
     targetLength = length;
     return true;
 #else
+    cerr << "IMFavorites_Engine Error: Cannot set TargetLength without TagLib support." << endl;
     return false;
-#endif // TAGLIB_IS_PRESENT
+#endif // HAVE_TAGLIB_TAGLIB_H
 }
 
 bool imfavorites_engine::setCram(int in) {
@@ -173,7 +174,7 @@ unsigned long imfavorites_engine::getFilesize(const char *FileName)
 
 unsigned long imfavorites_engine::getFileLength(const char *FileName)
 {
-#ifdef TAGLIB_IS_PRESENT
+#ifdef HAVE_TAGLIB_TAGLIB_H
     TagLib::FileRef f(FileName);
 
     if (f.file()->isValid())
@@ -181,7 +182,7 @@ unsigned long imfavorites_engine::getFileLength(const char *FileName)
 
     // If the file doesn't exist or something strange like that,
     //  return 0. We'll skip it...
-#endif // TAGLIB_IS_PRESENT
+#endif // HAVE_TAGLIB_TAGLIB_H
 
     return 0;
 }
@@ -189,7 +190,7 @@ unsigned long imfavorites_engine::getFileLength(const char *FileName)
 void imfavorites_engine::printOutSummary(void) {
     cout << endl << "Done!";
 
-    if (limitSetting = 2 ) {
+    if (limitSetting == 2 ) {
     cout << "\t Filled " << long(collectedLength/60) << " minutes, " << collectedSize%60 << " seconds." << endl;
     cout << "\t Linked " << numFiles << " songs. ";
 
@@ -197,8 +198,8 @@ void imfavorites_engine::printOutSummary(void) {
     cout << "\t Filled " << collectedSize << " bytes (" << collectedSize / 1048576 << " MB)" << endl;
     cout << "\t Linked " << numFiles << " songs. ";
 
-    } else if (limitSetting = 0) {
-    cout << "\t Filled " << collectedSize << " / " << targetSize << " bytes (" << collectedSize / 1048576 << " / " << targetSize / 1048576 << " MB)" << endl;
+    } else if (limitSetting == 0) {
+    cout << "\t Filled " << collectedSize << " bytes (" << collectedSize / 1048576 << " MB)" << endl;
     cout << "\t Linked " << numFiles << " songs. ";
     }
 
@@ -212,10 +213,10 @@ void imfavorites_engine::printOutSummary(void) {
 void imfavorites_engine::printSummary(void) {
     /* Print out option summary */
     if (limitSetting == 2)
-        cout << "Length of collection to make: \t" << targetLength << endl;
+        cout << "Length of collection to make: \t" << long(targetLength/60) << " minutes, " << targetLength%60 << " seconds." << endl;
     else if (limitSetting == 1)
         cout << "Maximum number of files to copy: \t" << maxNum << endl;
-    else if (limitSetting = 0)
+    else if (limitSetting == 0)
         cout << "Size of collection to make: \t\t" << maxSize << " MB, " << targetSize << " b" << endl;
 
     cout << "Target path for collection: \t\t" << symTargetDir << endl;
@@ -293,12 +294,13 @@ int imfavorites_engine::checkConstraints(void) {
     // Check filesize then see if we're over limit.
     unsigned long size = getFilesize(database->getFieldPChar(1));
     // Check song length...
-    unsigned long length = 0;
+    unsigned long length = getFileLength(database->getFieldPChar(1));
 
     // This also takes care of files that don't
     // exist - their size is 0, so just skip...
     if (size < 42) return 2; // 0x2A seems a good number.
-    if (length < 1) return 2; // 1 second songs simply suck...
+    // if (length < 1) return 2; // Don't do this since if songlength isn't
+                                 // working we return 0.
 
     switch(limitSetting) {
         case 0: // Limit by Size
