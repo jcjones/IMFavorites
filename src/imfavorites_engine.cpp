@@ -145,6 +145,7 @@ unsigned long imfavorites_engine::getFilesize(const char *FileName)
         return file.st_size;
     }
 
+    // If the file doesn't exist or something strange like that, return 0. We'll skip it...
     return 0;
 }
 
@@ -237,55 +238,57 @@ int imfavorites_engine::runFavorites(sqlite_db *p_db) {
 }
 
 int imfavorites_engine::checkConstraints(sqlite_db *p_db) {
-    /* Return Values:
-        0 - Fail or Done
-        1 - All OK (or Cramming)
-        2 - File too small / Don't copy
-    */
+    // Return Values:
+    //  0 - Fail or Done
+    //  1 - All OK (or Cramming)
+    //  2 - File too small / Don't copy
 
-    /* Format for printing later. */
+
+    // Format for printing later.
     string baseName = p_db->getField(1);
     string::size_type lastSlash = baseName.find_last_of("/")+1;
     string fileName = baseName.substr(lastSlash);
 
-    /* Check filesize then see if we're over limit. */
+    // Check filesize then see if we're over limit.
     unsigned long size = getFilesize(p_db->getFieldPChar(1));
+
+    // This also takes care of files that don't exist - their size is 0, so just skip...
 
     if (size < 42) return 2; // 0x2A seems a good number.
 
     /* Don't check against size if we're only doing numbers. */
     if ((collectedSize + size > targetSize) && (!maxNumSet)) {
-        /* If this file would put us over the edge, then
-           stop unless cram is true. */
+        // If this file would put us over the edge, then
+        // stop unless cram is true.
         if (!cram) return 0;
 
-        /* Note this skip. We don't want to walk the
-        whole bloody list, after all. So we track the
-        cram skips and will halt when it appears we
-        have 300 kilobytes of space to cram, while the
-        user only has 9-meg symphonies... */
+        // Note this skip. We don't want to walk the
+        // whole bloody list, after all. So we track the
+        // cram skips and will halt when it appears we
+        // have 300 kilobytes of space to cram, while the
+        // user only has 9-meg symphonies...
         ++cram;
 
-        /* 48 tries seems good to me (50 - 2). If it's that
-        far down the list, then will the user even want
-        to listen to it? ;) */
-        if (cram > 50) return 0; /* Abort */
+        // 98 tries seems good to me (100 - 2). If it's that
+        // far down the list, then will the user even want
+        // to listen to it? ;)
+        if (cram > 100) return 0; /* Abort */
 
-        /* This file may have defeated us, but don't stop yet! */
+        // This file may have defeated us, but don't stop yet!
         if (verbose) cout << "CRAM: Can't cram " << fileName << " (" << size << " > " << targetSize - collectedSize << ")" << endl;
 
         return 2;
     }
 
     if (cram > 1) {
-        /* Chalk up a cram... */
+        // Chalk up a cram...
         ++numCrams;
     }
 
-    /* Count this file's size in the total */
+    // Count this file's size in the total
     collectedSize += size;
 
-    /* Add another tick to the wall... */
+    // Add another tick to the wall...
     ++numFiles;
 
     return 1;
