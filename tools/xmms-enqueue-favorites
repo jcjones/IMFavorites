@@ -1,0 +1,9 @@
+#!/bin/bash
+imfavorites $* -l |
+
+while read line
+do
+echo "Enqueuing $line"
+xmms -e "$line" &
+done
+
