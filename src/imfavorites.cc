@@ -42,6 +42,7 @@ int main(int argc, char **argv)
         "n:maxnum NUMBER",
 #ifdef HAVE_TAGLIB_TAGLIB_H
         "t:time MINUTES:SECONDS",
+        "\07|music-cd \b",
 #endif // HAVE_TAGLIB_TAGLIB_H
         "\05|cd \b",
         "\06|dvd \b",
@@ -82,6 +83,9 @@ int main(int argc, char **argv)
             /* DVD size */
             program->setTargetSize(4700);
             break;
+        case '\07' :
+            program->setTargetLength(80*60);
+            break;
         case 'n' :
             if (optarg == NULL)  ++errors;
             program->setNumFiles(atoi(optarg));
@@ -91,7 +95,7 @@ int main(int argc, char **argv)
                 ++errors;
                 break;
             }
-            
+
             length = strchr(optarg, ':');
             lengthplusone = strchr(optarg, ':')+1;
 
@@ -132,14 +136,17 @@ int main(int argc, char **argv)
             cout << "\t\t\tDefault: 650 MB (74-min CD-R)" << endl;
             cout << "\t   --cd\t\t\t Set the size to 700 MB (80-min CD-R)" << endl;
             cout << "\t   --dvd\t\t Set the size to 4.7 GB (120-min DVD)" << endl;
-            cout << "\t-c|--cram\t\t Cram some small files into leftover space." << endl;
-            cout << "\t-n|--maxnum\t<num>\t Maximum number of songs to copy" << endl << endl;
+            cout << "\t-n|--maxnum\t<num>\t Maximum number of songs to copy" << endl;
 #ifdef HAVE_TAGLIB_TAGLIB_H
-            cout << "\t-t|--time\t<m>:<s>\t Length of resulting collection" << endl << endl;
+            cout << "\t-t|--time\t<m>:<s>\t Length of resulting collection" << endl;
+            cout << "\t   --music-cd\t\t Set the length to 80-minutes (CD-R)" << endl;
 #endif // HAVE_TAGLIB_TAGLIB_H
+            cout << "\t-c|--cram\t\t Cram some small files into leftover space." << endl << "\t\t\t\t (Not applicable for --maxnum)" << endl;
 
-            cout << "Location Options: ()" << endl;
-            cout << "\tTARGET_PATH\t\t Path in which to put all the symbolic links" << endl;
+            cout << endl;
+
+            cout << "Location Options:" << endl;
+            cout << "\tTARGET_PATH\t\t Path in which to put all the symbolic links" << endl << endl;
 
             cout << "Alternative Modes:" << endl;
             cout << "\t-l|--list\t\t \"Pretend\" mode. Only prints the filenames" << endl << endl;
