@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     mainWindow = new class mainWindow();
 
     m.run(*mainWindow);
-    delete mainWindow;
+//    delete mainWindow;
     return 0;
 }
 

@@ -1,6 +1,9 @@
-Version 1.2 - ?
+Version 1.2 - 28 September 2004
     * Database interface now uses SQLite 3.x, to keep up with IMMS.
     * Regular Expressions support through a filename mask.
+    * You can now set the minimum allowed score of a song (default: 100)
+        (NOTE! Support for this hasn't been added to either of the
+        interface programs, just the engine... sorry!)
 
 Version 1.1 - 1 May 2004
     * May have fixed an odd GTKMM problem involving the PixBuf loader.
@@ -54,4 +57,13 @@ Version 0.1 - 21 March 2004
 	update files from .glade file
 
 2004/4/25 23:19:24 EDT
+	update files from .glade file
+
+2004/9/28 12:37:43 EDT
+	update files from .glade file
+
+2004/9/28 12:41:02 EDT
+	update files from .glade file
+
+2004/9/28 13:08:59 EDT
 	update files from .glade file

@@ -57,7 +57,7 @@ knows them), and then do the hard work of compiling a CD, DVD or Mp3 player full
 of your favorites for you.
 
 What happens is this:
- * IMFavorites accesses the IMMS database in ~/.imms/imms.db
+ * IMFavorites accesses the IMMS database in ~/.imms/imms2.db
  * IMFavorites gets a list of your favorite songs in order
  * Then one by one symbolic links are made from your songs
    to a directory you specify as a target.

@@ -192,6 +192,9 @@ unsigned long imfavorites_engine::getFilesize(const char *FileName)
 unsigned long imfavorites_engine::getFileLength(const char *FileName)
 {
 #ifdef HAVE_TAGLIB_TAGLIB_H
+    // Check that it exists
+    if (this->getFilesize(FileName) == 0) return 0;
+
     TagLib::FileRef f(FileName);
 
     if (f.file()->isValid())
@@ -286,8 +289,6 @@ int imfavorites_engine::runFavorites(void) {
     }
 
     /* Go */
-
-    cerr << sql_command << endl;
 
     database->execute(sql_command);
 

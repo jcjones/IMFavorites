@@ -1,5 +1,5 @@
 #!/bin/sh
-# generated 2004/4/6 16:25:12 EDT by pug@resmiranda.berthall.com.(none)
+# generated 2004/9/28 13:08:59 EDT by pug@resmiranda.berthall.com.(none)
 # using glademm V2.0.0.1
 
 if test ! -f install-sh ; then touch install-sh ; fi

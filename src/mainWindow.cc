@@ -46,6 +46,8 @@ mainWindow::mainWindow() {
     directoryEntry->set_text(string(getenv("HOME")).append("/favorite_music/"));
     image1->set(this->findPixmap(cd_image));
 
+    this->on_all1_activate();
+
 #ifndef HAVE_TAGLIB_TAGLIB_H
     limitLengthRadio->set_sensitive(false);
     minutesSpinButton->set_sensitive(false);

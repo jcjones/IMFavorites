@@ -2,7 +2,7 @@
 # using glademm V2.0.0.1
 
 AC_INIT(src/imfavorites.cc)
-AM_INIT_AUTOMAKE(imfavorites, 1.1)
+AM_INIT_AUTOMAKE(imfavorites, 1.2)
 AM_CONFIG_HEADER(config.h)
 
 AC_ISC_POSIX
@@ -82,7 +82,7 @@ AM_CONDITIONAL(WITH_TAGLIB, test "x$with_taglib" = "xyes")
 
 AC_OUTPUT(Makefile
         src/Makefile \
-        po/Makefile.in \
-        m4/Makefile \
+dnl        po/Makefile.in \
+dnl        m4/Makefile \
         pixmaps/Makefile \
         tools/Makefile)

@@ -1,4 +1,4 @@
-SUBDIRS = m4 po src pixmaps tools
+SUBDIRS = src pixmaps tools
 
 EXTRA_DIST = config.rpath mkinstalldirs  AUTHORS TODO README configure
 
