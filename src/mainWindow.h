@@ -13,6 +13,10 @@
 #  include "mainWindow_glade.h"
 #  define _MAINWINDOW_H
 
+#ifndef GTKMM_IS_PRESENT
+#error "Can't compile this without GTKMM, use the --with-gtkmm configure flag."
+#endif
+
 #include <imfavorites_engine.h>
 
 static void progress_callback(imfavorites_engine* engine, int songs);

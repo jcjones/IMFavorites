@@ -19,6 +19,10 @@ AC_ARG_WITH(gtkmm,
 [  --with-gtkmm          build GTK GUI],, [with_gtkmm=yes])
 AC_ARG_WITH(gtkmm,
 [  --without-gtkmm       do not build GTK GUI],, [with_gtkmm=no])
+AC_ARG_WITH(taglib,
+[  --with-taglib         use TagLib],, [with_taglib=yes])
+AC_ARG_WITH(taglib,
+[  --without-taglib      do not use TagLib (disable length limiting)],, [with_taglib=no])
 
 dnl *************************************************
 dnl gettext support
@@ -56,12 +60,27 @@ dnl Check for SQLite
 AC_CHECK_LIB(sqlite, sqlite_open,, [with_sqlite=no])
 AC_CHECK_HEADERS(sqlite.h,, [with_sqlite=no])
 
-if test "$with_sqlite" = "no"; then
+if test "x$with_sqlite" = "xno"; then
         AC_MSG_ERROR([sqlite required and missing.])
 fi
 
+dnl Check for TagLib
+
+if test "x$with_taglib" = "xyes"; then
+dnl    AC_CHECK_LIB(libtag,Tag::Tag(),, [with_taglib=no])
+    AC_CHECK_HEADERS(taglib/taglib.h,, [with_taglib=no])
+fi
+
+if test "x$with_taglib" = "xno"; then
+    AC_MSG_ERROR([TagLib Not Found. Song length limiting will not work.])
+else
+    AC_DEFINE([TAGLIB_IS_PRESENT],,[Define to 1 if TagLib is installed])
+fi
+
+
 dnl Make Makefiles
 AM_CONDITIONAL(BUILD_GIMFAVORITES, test "x$with_gtkmm" = "xyes")
+AM_CONDITIONAL(WITH_TAGLIB, test "x$with_taglib" = "xyes")
 
 AC_OUTPUT(Makefile
         src/Makefile \

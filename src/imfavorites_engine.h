@@ -17,6 +17,12 @@
 
 #include <sqlite_db.h>
 
+#ifdef TAGLIB_IS_PRESENT
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
+#include <taglib/tfile.h>
+#endif // TAGLIB_IS_PRESENT
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -31,23 +37,29 @@ typedef void (*imCallback)(class imfavorites_engine *, int delta) ;
 
 class imfavorites_engine{
 private:
-    int     numFiles;  /* number of files linked */
-    int     numCrams;  /* number of successful crams made */
-    int     maxNum;    /* number of files to get */
-    int     maxNumSet; /* True if we're going by number, false if going by size */
-    int     maxSize;
+    long     numFiles;  /* number of files linked */
+    unsigned long long collectedSize; /* size of files collected */
+    unsigned long collectedLength;     /* length of files collected */
+
+    long     maxNum;    /* number of files to get */
+    long     maxSize;   /* size to get in MB */
+    unsigned long long targetSize; /* size to get in bytes - this needs to go */
+    unsigned long targetLength; /* length to get in seconds */
+
+
+    int     limitSetting; /* 0 if we're limiting by size
+                             1 if we're limiting by number
+                             2 if we're limiting by length */
+
 
     int     cram;      /* cram is 0 when disabled,
                           >0 when enabled, and
                           >1 when actively cramming. */
+    int     numCrams;  /* number of successful crams made */
+
+
     int     verbose;   /* verbosity level (bigger is more verbose) */
     int     pretend;
-
-    /* I feel special.. I need 64 bit computing for this!
-    4.7 gigs in bytes is 4,928,307,200 > 4,294,967,294, which is the max
-    for unsigned long int. */
-    unsigned long long int  collectedSize;
-    unsigned long long int  targetSize;
 
     string  symTargetDir;           /* The actual directory where we place links */
     string  mainMp3MaskDirectory;   /* The mask to subtract from filenames */
@@ -59,6 +71,7 @@ private:
     /* Return the filesize in bytes of a file ... this is long, but for huge songs
        it'd need to be long long. ;) */
     unsigned long   getFilesize(const char *);
+    unsigned long   getFileLength(const char *);
 
     int     makeDirectory(string);
     int     makeTargetDirectory(string);
@@ -76,22 +89,31 @@ public:
     ~imfavorites_engine();
 
     bool    run();
-    bool    setNumFiles(int);
     bool    setCram(int);
     bool    setVerbose(int);
     bool    setPretend(int);
-    bool    setTargetSize(unsigned long);
     bool    setTargetDir(string);
     bool    setOutStream(void);
+
+    bool    setNumFiles(long);
+    bool    setTargetSize(unsigned long);
+    bool    setTargetLength(unsigned long);
 
     void    printSummary(void);
     void    printOutSummary(void);
     string  getVersion(void);
+
     unsigned long   getCollectedSizeMB(void);
     unsigned long   getTargetSizeMB(void);
     long    getCollectedFiles(void);
     long    getTargetCollectedFiles(void);
+    unsigned long   getCollectedLength(void);
+    unsigned long   getTargetLength(void);
+
     int     isLimitedByNumber(void);
+    int     isLimitedByLength(void);
+    int     isLimitedBySize(void);
+
     int     isReady(void);
 
     void    setCallback (imCallback c) { cb = c ;    }

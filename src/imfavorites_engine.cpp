@@ -17,17 +17,18 @@ imfavorites_engine::imfavorites_engine() {
     string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
 
     // Variable init
-    numFiles    = 0; // number of files linked
-    numCrams    = 0; // number of successful crams made
-    cram        = 0; // cram is 0 when disabled,
-                     //  >0 when enabled, and
-                     //  >1 when actively cramming.
-    verbose     = 0; // verbosity level (bigger is more verbose)
+    numFiles        = 0; // number of files linked
+    collectedSize   = 0; // size of files linked
+    collectedLength = 0; // length of files linked
 
-    collectedSize = 0;
+    numCrams        = 0; // number of successful crams made
+    cram            = 0; // cram is 0 when disabled,
+                         //  >0 when enabled, and
+                         //  >1 when actively cramming.
+    verbose         = 0; // verbosity level (bigger is more verbose)
+
 
     // Init through helpers
-    this->setNumFiles(99999);
     this->setTargetSize(650);
 
     // Set paths' defaults
@@ -51,10 +52,27 @@ imfavorites_engine::~imfavorites_engine() {
     delete database;
 }
 
-bool imfavorites_engine::setNumFiles(int in) {
-    maxNumSet = 1;
+bool imfavorites_engine::setTargetSize(unsigned long size ) {
+    limitSetting = 0;
+    maxSize = size;
+    targetSize = (unsigned long long)size * 1048576 ; // convert megs into bytes
+    return true;
+}
+
+bool imfavorites_engine::setNumFiles(long in) {
+    limitSetting = 1;
     maxNum = in;
     return true;
+}
+
+bool imfavorites_engine::setTargetLength(unsigned long length ) {
+#ifdef TAGLIB_IS_PRESENT
+    limitSetting = 2;
+    targetLength = length;
+    return true;
+#else
+    return false;
+#endif // TAGLIB_IS_PRESENT
 }
 
 bool imfavorites_engine::setCram(int in) {
@@ -65,13 +83,6 @@ bool imfavorites_engine::setCram(int in) {
 bool imfavorites_engine::setVerbose(int in) {
     verbose = in;
     return true;;
-}
-
-bool imfavorites_engine::setTargetSize(unsigned long size ) {
-    maxNumSet = 0;
-    maxSize = size;
-    targetSize = (unsigned long long int)size * 1048576 ; // convert megs into bytes
-    return true;
 }
 
 bool imfavorites_engine::setTargetDir(string in) {
@@ -160,14 +171,33 @@ unsigned long imfavorites_engine::getFilesize(const char *FileName)
     return 0;
 }
 
+unsigned long imfavorites_engine::getFileLength(const char *FileName)
+{
+#ifdef TAGLIB_IS_PRESENT
+    TagLib::FileRef f(FileName);
+
+    if (f.file()->isValid())
+        return f.file()->audioProperties()->length();
+
+    // If the file doesn't exist or something strange like that,
+    //  return 0. We'll skip it...
+#endif // TAGLIB_IS_PRESENT
+
+    return 0;
+}
+
 void imfavorites_engine::printOutSummary(void) {
     cout << endl << "Done!";
 
-    if (maxNumSet) {
+    if (limitSetting = 2 ) {
+    cout << "\t Filled " << long(collectedLength/60) << " minutes, " << collectedSize%60 << " seconds." << endl;
+    cout << "\t Linked " << numFiles << " songs. ";
+
+    } else if (limitSetting == 1) {
     cout << "\t Filled " << collectedSize << " bytes (" << collectedSize / 1048576 << " MB)" << endl;
     cout << "\t Linked " << numFiles << " songs. ";
 
-    } else {
+    } else if (limitSetting = 0) {
     cout << "\t Filled " << collectedSize << " / " << targetSize << " bytes (" << collectedSize / 1048576 << " / " << targetSize / 1048576 << " MB)" << endl;
     cout << "\t Linked " << numFiles << " songs. ";
     }
@@ -181,9 +211,11 @@ void imfavorites_engine::printOutSummary(void) {
 
 void imfavorites_engine::printSummary(void) {
     /* Print out option summary */
-    if (maxNumSet)
+    if (limitSetting == 2)
+        cout << "Length of collection to make: \t" << targetLength << endl;
+    else if (limitSetting == 1)
         cout << "Maximum number of files to copy: \t" << maxNum << endl;
-    else
+    else if (limitSetting = 0)
         cout << "Size of collection to make: \t\t" << maxSize << " MB, " << targetSize << " b" << endl;
 
     cout << "Target path for collection: \t\t" << symTargetDir << endl;
@@ -212,7 +244,7 @@ int imfavorites_engine::runFavorites(void) {
     /* Build initial SQL statement */
     string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating > 99 ORDER BY Rating.rating DESC ");
 
-    if (maxNumSet) {
+    if (limitSetting == 1) {
         sql_command.append("LIMIT ").append(maxNum_s).append(";");
     } else {
         sql_command.append(";");
@@ -260,44 +292,71 @@ int imfavorites_engine::checkConstraints(void) {
 
     // Check filesize then see if we're over limit.
     unsigned long size = getFilesize(database->getFieldPChar(1));
+    // Check song length...
+    unsigned long length = 0;
 
-    // This also takes care of files that don't exist - their size is 0, so just skip...
-
+    // This also takes care of files that don't
+    // exist - their size is 0, so just skip...
     if (size < 42) return 2; // 0x2A seems a good number.
+    if (length < 1) return 2; // 1 second songs simply suck...
 
-    /* Don't check against size if we're only doing numbers. */
-    if ((collectedSize + size > targetSize) && (!maxNumSet)) {
-        // If this file would put us over the edge, then
-        // stop unless cram is true.
-        if (!cram) return 0;
+    switch(limitSetting) {
+        case 0: // Limit by Size
+            if (collectedSize + size > targetSize) {
+                // If this file would put us over the edge, then
+                // stop unless cram is true.
+                if (!cram) return 0;
 
-        // Note this skip. We don't want to walk the
-        // whole bloody list, after all. So we track the
-        // cram skips and will halt when it appears we
-        // have 300 kilobytes of space to cram, while the
-        // user only has 9-meg symphonies...
-        ++cram;
+                // Note this skip. We don't want to walk the
+                // whole bloody list, after all. So we track the
+                // cram skips and will halt when it appears we
+                // have 300 kilobytes of space to cram, while the
+                // user only has 9-meg symphonies...
+                ++cram;
 
-        // 98 tries seems good to me (100 - 2). If it's that
-        // far down the list, then will the user even want
-        // to listen to it? ;)
-        if (cram > 100) return 0; /* Abort */
+                // 98 tries seems good to me (100 - 2). If it's that
+                // far down the list, then will the user even want
+                // to listen to it? ;)
+                if (cram > 100) return 0; /* Abort */
 
-        // This file may have defeated us, but don't stop yet!
-        if (verbose) cout << "CRAM: Can't cram " << fileName << " (" << size << " > " << targetSize - collectedSize << ")" << endl;
+                // This file may have defeated us, but don't stop yet!
+                if (verbose) cout << "CRAM: Can't cram " << fileName << " (" << size << " > " << targetSize - collectedSize << ")" << endl;
 
-        return 2;
+                return 2;
+            }
+            break;
+        case 1: // Limit by Number
+            // Yay, do nothing because this is handled by the SQL statement!
+            break;
+        case 2: // Limit by Length
+            if (collectedLength + length > targetLength) {
+                if (!cram) return 0;
+
+                ++cram;
+
+                if (cram > 100) return 0; /* Abort */
+
+                // This file may have defeated us, but don't stop yet!
+                if (verbose) cout << "CRAM: Can't cram " << fileName << " (" << length << " > " << targetLength - collectedLength << ")" << endl;
+
+                return 2;
+            }
+            break;
+        default: // Not good.
+            return 0;
+
     }
 
+
     if (cram > 1) {
-        // Chalk up a cram...
+        // Chalk up a successful cram...
         ++numCrams;
     }
 
-    // Count this file's size in the total
-    collectedSize += size;
-
     // Add another tick to the wall...
+
+    collectedSize   += size;
+    collectedLength += length;
     ++numFiles;
 
     return 1;
@@ -446,8 +505,16 @@ long imfavorites_engine::getTargetCollectedFiles() {
     return maxNum;
 }
 
+int imfavorites_engine::isLimitedBySize() {
+    return (limitSetting==0);
+}
+
 int imfavorites_engine::isLimitedByNumber() {
-    return maxNumSet;
+    return (limitSetting==1);
+}
+
+int imfavorites_engine::isLimitedByLength() {
+    return (limitSetting==2);
 }
 
 int imfavorites_engine::isReady() {
@@ -456,7 +523,9 @@ int imfavorites_engine::isReady() {
     // We're going to a maxSize of songs and that's >0
     // AND
     // We're either pretending, or we have a symTargetDir set
-    return ( (maxNumSet && maxNum >0) || (!maxNumSet && maxSize > 0) ) &&
+    return ( (limitSetting==0 && maxSize > 0) ||
+             (limitSetting==1 && maxNum  > 0) ||
+             (limitSetting==2 && targetLength > 0) ) &&
            (symTargetDir.length() > 0 || pretend);
 }
 

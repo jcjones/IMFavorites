@@ -1,4 +1,10 @@
 Version 1.0 - XX April 2004
+    * Added configure-time selection of whether to build gimfavorites
+      or not.
+    * Added TagLib as a optional dependency to...
+    * Allow song-length limiting, new API functions added related.
+    * Add song-length limiting to the GTK+ GUI and console application
+      closing feature request 934108.
 
 
 Version 0.4 (1.0 RC1) - 17 April 2004
