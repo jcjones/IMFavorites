@@ -18,6 +18,7 @@ sqlite_db::sqlite_db()
     const char **p_col_names;
     const char *pzTail = 0;
     int nrecs = 0;
+    int crecordnum = 0;
     int queryDone = 0;
     pathToDB = "";
     vm = 0;
@@ -85,16 +86,17 @@ int sqlite_db::next() {
     }
 
     if ( retval != SQLITE_ROW) {
+        // SQLITE_DONE, SQLITE_ERROR or SQLITE_MISUSE trigger this
         queryDone = 1;
         return 0;
     }
+
     return getNumResults();
 }
 
 int sqlite_db::getNumResults() {
     if (!this->isOpen() || queryDone) return -1;
-    nrecs = sqlite3_data_count( vm );
-    return nrecs;
+    return nrecs = sqlite3_data_count( vm );
 }
 
 const char * sqlite_db::getFieldPChar(int i) {

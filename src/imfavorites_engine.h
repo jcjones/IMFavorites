@@ -14,6 +14,7 @@
 
 #include <iostream.h>
 #include <string>
+#include <vector>
 
 #include "config.h"
 
