@@ -14,6 +14,7 @@
 #define IMFAVORITES_VERSION "0.4, 10 April 2004"
 
 imfavorites_engine::imfavorites_engine() {
+    string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
 
     // Variable init
     numFiles    = 0; // number of files linked
@@ -35,9 +36,19 @@ imfavorites_engine::imfavorites_engine() {
 
     // Initial callback (can be overridden)
     this->setCallback(default_progress_cb);
+
+    // Start the DB
+    database = new sqlite_db();
+
+    if (verbose) cout << "Opening database..." << endl;
+    database->open(pathToDB);
+
+    if (!database->isOpen()) cerr << "Failed to open DB at " <<  pathToDB << endl;
+    else mainMp3MaskDirectory = this->findMask();
 }
 
 imfavorites_engine::~imfavorites_engine() {
+    delete database;
 }
 
 bool imfavorites_engine::setNumFiles(int in) {
@@ -181,7 +192,7 @@ void imfavorites_engine::printSummary(void) {
 }
 
 
-int imfavorites_engine::runFavorites(sqlite_db *p_db) {
+int imfavorites_engine::runFavorites(void) {
     unsigned long size = 0;
     int ret = 0;
     int loop_return = 1;
@@ -192,8 +203,6 @@ int imfavorites_engine::runFavorites(sqlite_db *p_db) {
 
     char maxNum_s[64];
     sprintf(maxNum_s, "%d", maxNum);
-
-    mainMp3MaskDirectory = this->findMask(p_db); // The mask to subtract from filenames
 
     if (!pretend)  {
         if ( this->makeDirectory(symTargetDir) < 1 ) return 0;
@@ -211,7 +220,7 @@ int imfavorites_engine::runFavorites(sqlite_db *p_db) {
 
     /* Go */
 
-    p_db->execute(sql_command);
+    database->execute(sql_command);
 
     /* Begin looping and taking care of data */
 
@@ -219,25 +228,25 @@ int imfavorites_engine::runFavorites(sqlite_db *p_db) {
        1 if all is okay, 2 if we need to skip this entry */
 
     if (pretend) {
-        while ( (loop_return > 0) && (p_db->getNumResults()>0) ) {
-            loop_return = this->checkConstraints(p_db);
-            if (loop_return == 1) this->printFavorites(p_db);
+        while ( (loop_return > 0) && (database->getNumResults()>0) ) {
+            loop_return = this->checkConstraints();
+            if (loop_return == 1) this->printFavorites();
             this->invokeCallback(numFiles);
-            p_db->next();
+            database->next();
         }
     } else {
-        while ( (loop_return > 0) && (p_db->getNumResults()>0) ) {
-            loop_return = this->checkConstraints(p_db);
-            if (loop_return == 1) this->symLinkFavorites(p_db);
+        while ( (loop_return > 0) && (database->getNumResults()>0) ) {
+            loop_return = this->checkConstraints();
+            if (loop_return == 1) this->symLinkFavorites();
             this->invokeCallback(numFiles);
-            p_db->next();
+            database->next();
         }
     }
 
     return 1;
 }
 
-int imfavorites_engine::checkConstraints(sqlite_db *p_db) {
+int imfavorites_engine::checkConstraints(void) {
     // Return Values:
     //  0 - Fail or Done
     //  1 - All OK (or Cramming)
@@ -245,12 +254,12 @@ int imfavorites_engine::checkConstraints(sqlite_db *p_db) {
 
 
     // Format for printing later.
-    string baseName = p_db->getField(1);
+    string baseName = database->getField(1);
     string::size_type lastSlash = baseName.find_last_of("/")+1;
     string fileName = baseName.substr(lastSlash);
 
     // Check filesize then see if we're over limit.
-    unsigned long size = getFilesize(p_db->getFieldPChar(1));
+    unsigned long size = getFilesize(database->getFieldPChar(1));
 
     // This also takes care of files that don't exist - their size is 0, so just skip...
 
@@ -294,15 +303,15 @@ int imfavorites_engine::checkConstraints(sqlite_db *p_db) {
     return 1;
 }
 
-int imfavorites_engine::printFavorites(sqlite_db *p_db) {
-    cout << p_db->getField(1) << endl;
+int imfavorites_engine::printFavorites(void) {
+    cout << database->getField(1) << endl;
     return 1;
 }
 
-int imfavorites_engine::symLinkFavorites(sqlite_db *p_db) {
+int imfavorites_engine::symLinkFavorites(void) {
     /* Figure out the name of the symlink -- delete
        all the text prior to and including the last slash */
-    string baseName = p_db->getField(1);
+    string baseName = database->getField(1);
     string::size_type lastSlash = baseName.find_last_of("/")+1;
     string fileName = baseName.substr(lastSlash);
 
@@ -326,19 +335,19 @@ int imfavorites_engine::symLinkFavorites(sqlite_db *p_db) {
     this->makeTargetDirectory(subDirectoryPath);
 
     /* Write out the file's info, then symlink it.*/
-    if (verbose)  cout << "[" << p_db->getField(0) << "] " << p_db->getField(1) << endl;
+    if (verbose)  cout << "[" << database->getField(0) << "] " << database->getField(1) << endl;
 
-    int ret = symlink(p_db->getFieldPChar(1), symTarget.c_str());
+    int ret = symlink(database->getFieldPChar(1), symTarget.c_str());
 
     if (ret != 0) {
-        cerr << "Could not symlink " << p_db->getField(1) << " -> " << symTarget << endl;
+        cerr << "Could not symlink " << database->getField(1) << " -> " << symTarget << endl;
     }
 
     /* Progress Dot */
     return 1;
 }
 
-string imfavorites_engine::findMask(sqlite_db *DB) {
+string imfavorites_engine::findMask(void) {
     int count = 1, lastcount = 0;
 
     string query = "SELECT path FROM Library LIMIT 1;";
@@ -347,9 +356,9 @@ string imfavorites_engine::findMask(sqlite_db *DB) {
     string lastMask;
 
     /* Retrieve a single song from the DB for initial path name! */
-    DB->execute(query);
+    database->execute(query);
 
-    mangledPath = DB->getField(0);
+    mangledPath = database->getField(0);
 
     /* We need a string with the path name minus the filename */
     /* Axe the filename and leading / */
@@ -396,9 +405,9 @@ string imfavorites_engine::findMask(sqlite_db *DB) {
         query = string("SELECT count(path) FROM Library WHERE path LIKE \"").append(presentMask).append("%\"");
 
         /* Make a SQL call to get the count of like entries in the path database */
-        DB->execute(query);
+        database->execute(query);
 
-        count = atoi(DB->getFieldPChar(0));
+        count = atoi(database->getFieldPChar(0));
 
         if (verbose > 2) {
             cout << "pM: " << presentMask << endl;
@@ -415,17 +424,8 @@ string imfavorites_engine::findMask(sqlite_db *DB) {
 
 bool imfavorites_engine::run() {
 
-    string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
-
-    // Start the DB
-    if (verbose) cout << "Opening database..." << endl;
-
-    sqlite_db* p_db = new sqlite_db();
-
-    p_db->open(pathToDB);
-
-    if (!p_db->isOpen()) cerr << "Failed to open DB at " <<  pathToDB << endl;
-    else this->runFavorites(p_db);
+    if (!database->isOpen()) cerr << "Database not open." << endl;
+    else this->runFavorites();
 
     return 1;
 }
