@@ -11,7 +11,7 @@
 //
 #include "imfavorites_engine.h"
 
-#define IMFAVORITES_VERSION "1.2a, 2 October 2004"
+#define IMFAVORITES_VERSION "1.3, 15 November 2004"
 
 imfavorites_engine::imfavorites_engine() {
     string pathToDB = string(getenv("HOME")).append("/.imms/imms2.db");
@@ -265,16 +265,16 @@ int imfavorites_engine::runFavorites(void) {
     }
 
     /* Build initial SQL statement */
-    string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating >= ").append(minScore_s);
+    string sql_command = string("SELECT Rating.rating, Identify.path FROM Identify INNER JOIN Rating ON Rating.uid=Identify.uid WHERE Rating.rating >= ").append(minScore_s);
     
     /* Add mask GLOBs */
     for (int i = 0; i < filenameMask.size(); i++) {
         string maskBit = filenameMask[i];
 
         if (i < 1)
-                sql_command = sql_command.append(" AND Library.path GLOB \"");
+                sql_command = sql_command.append(" AND Identify.path GLOB \"");
         else
-                sql_command = sql_command.append(" OR Library.path GLOB \"");
+                sql_command = sql_command.append(" OR Identify.path GLOB \"");
 
         sql_command = sql_command.append(maskBit).append("\"");
     }
@@ -453,7 +453,7 @@ int imfavorites_engine::symLinkFavorites(void) {
 string imfavorites_engine::findMask(void) {
     int count = 1, lastcount = 0;
 
-    string query = "SELECT path FROM Library LIMIT 1;";
+    string query = "SELECT path FROM Identify LIMIT 1;";
     string presentMask = "";
     string mangledPath = "";
     string lastMask;
@@ -505,7 +505,7 @@ string imfavorites_engine::findMask(void) {
         /* Erase the directory name we just copied onto presentMask */
         mangledPath.erase(0, mangledPath.find_first_of("/")+1);
 
-        query = string("SELECT count(path) FROM Library WHERE path LIKE \"").append(presentMask).append("%\"");
+        query = string("SELECT count(path) FROM Identify WHERE path LIKE \"").append(presentMask).append("%\"");
 
         /* Make a SQL call to get the count of like entries in the path database */
         database->execute(query);
