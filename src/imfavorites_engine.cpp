@@ -11,7 +11,7 @@
 //
 #include "imfavorites_engine.h"
 
-#define IMFAVORITES_VERSION "1.1, 26 April 2004"
+#define IMFAVORITES_VERSION "1.1, 1 May 2004"
 
 imfavorites_engine::imfavorites_engine() {
     string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
