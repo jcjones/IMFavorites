@@ -48,7 +48,7 @@ int main(int argc, char **argv)
         "\05|cd \b",
         "\06|dvd \b",
         "c|cram \b",
-        "z|minscore NUMBER",
+        "z:minscore NUMBER",
         "l|list \b", // This is such a hack -- to make sure the option looks
         "v|verbose", // like the others, we use an esacped backspace... man I'm bad!
         "?|help",
@@ -96,6 +96,12 @@ int main(int argc, char **argv)
             if (optarg == NULL)  ++errors;
             program->setFilenameMask(string(optarg));
             break;
+        case 'z' :
+            if (optarg == NULL) 
+                ++errors;
+            else
+                program->setMinScore(atoi(optarg));
+            break;
         case 't' :
             if (optarg == NULL) {
                 ++errors;
@@ -134,10 +140,6 @@ int main(int argc, char **argv)
             cout << "Version " << program->getVersion() << endl;
             exit(1);
             break;
-        case 'z' :
-            if (optarg == NULL)  ++errors;
-            program->setMinScore(atoi(optarg));
-            break;
         case '?' :
             cout << opts.name() << " [OPTIONS] TARGET_PATH" << endl << endl;
 
@@ -163,7 +165,7 @@ int main(int argc, char **argv)
             cout << "\t-l|--list\t\t \"Pretend\" mode. Only prints the filenames" << endl << endl;
 
             cout << "Other:" << endl;
-            cout << "\t-z|--minscore\t\t Minimum IMMS score to allow (100 is default)" << endl;
+            cout << "\t-z|--minscore\t<num>\t Minimum IMMS score to allow (100 is default)" << endl;
             cout << "\t-v|--verbose\t\t Increases the verbosity level (-vv for more)" << endl;
             cout << "\t   --version\t\t Displays the version" << endl;
             cout << "\t-?|--help\t\t What you're seeing" << endl << endl;
