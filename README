@@ -7,7 +7,7 @@ kept on your system by IMMS to figure out your favorite songs, then symlinks
 them to a place of your choice. Read on...
 
 IMMS Website:           http://www.luminal.org/wiki/index.php/IMMS
-IMFavorites Website:    http://www.cise.ufl.edu/~jcjones/src/
+IMFavorites Website:    http://imfavorites.sourceforge.net/
 
 --------------------------------------------------------------------------------
 What the?:
@@ -17,7 +17,7 @@ If you've used IMMS for more than a few days, it's already gotten a decent idea
 of what kind of music you like and what kind of music you do not like. That
 information is stored within its database, dripping with desire to be useful.
 This program simply uses that information to find your favorite songs (as IMMS
-knows them), and then do the hard work of compiling a CD, DVD, Mp3 player full
+knows them), and then do the hard work of compiling a CD, DVD or Mp3 player full
 of your favorites for you.
 
 What happens is this:
@@ -38,7 +38,7 @@ But smartly. An example:
 My music is all stored in /mnt/mp3s/, in subdirectories. Let's take one of my
 songs as an example:
 
-    /mnt/mp3s/Classical/Wagner-das Ring/01 - Entrance of the gods.mp3
+    /mnt/mp3s/Classical/Wagner-das Ring/01 - Das Rheingold.mp3
 
 IMFavorites will automatically determine that "/mnt/mp3s" is the subdirectory
 that contains all your music, and then:
@@ -48,26 +48,25 @@ that contains all your music, and then:
 
 So, if you have the following command:
 
-    imfavorites ~/mp3s/favorites/
+    imfavorites {--cd or something} ~/mp3s/favorites/
 
 then
 
-    /mnt/mp3s/Classical/Wagner-das Ring/01-Entrance of the gods.mp3
+    /mnt/mp3s/Classical/Wagner-das Ring/01 - Das Rheingold.mp3
 
 will be symbolically linked to
 
-    ~/mp3s/favorites/Classical/Wagner-das Ring/01-Entrance of the gods.mp3
+    ~/mp3s/favorites/Classical/Wagner-das Ring/01 - Das Rheingold.mp3
 
 automagically! So you get a directory tree like your mp3s directory for your ease
 of browsing.
 
 --------------------------------------------------------------------------------
-Mask Overriding:
+GTK2 Frontend (gimfavorites)
 --------------------------------------------------------------------------------
 
-If the mask-determining algorithm gets confused (probably because you have
-music in a whole host of directories spread across your filesystem), you can
-override the algorithm by specifying --mask PATH on the command line.
+Just point and click. The algorithms are all the same as the above, but it's
+pretty.
 
 --------------------------------------------------------------------------------
 Aknowledgements:
@@ -79,4 +78,6 @@ Aknowledgements:
     Brad Appleton       <bradapp@enteract.com>
         for the Options library:
         (http://www.cmcrossroads.com/bradapp/ftp/src/libs/C++/Options.html)
-
+    Everaldo Coelho     <teveraldo@everaldo.com>
+        for the CD and DVD icons which come from CrystalSVG
+        (http://www.everaldo.com/)

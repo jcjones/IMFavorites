@@ -4,3 +4,5 @@
 ./src/mainWindow.cc
 ./src/fileSelection_glade.cc
 ./src/fileSelection.cc
+./src/doneDialog_glade.cc
+./src/doneDialog.cc

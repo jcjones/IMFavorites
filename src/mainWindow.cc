@@ -12,6 +12,9 @@
 #include "config.h"
 #include "mainWindow.h"
 #include "fileSelection.h"
+#include "doneDialog.h"
+
+#include <gtkmm/messagedialog.h>
 
 #define cd_image "cdrom_umount.svgz"
 #define dvd_image "dvd_umount.svgz"
@@ -22,7 +25,6 @@ extern mainWindow *mainWindow;
 
 static void progress_callback(imfavorites_engine* engine, int songs) {
     double fraction;
-    string text = "Running";
 
     if (engine->isLimitedByNumber()) {
         // We're limiting by number
@@ -35,7 +37,6 @@ static void progress_callback(imfavorites_engine* engine, int songs) {
     if (fraction > 1) fraction = 1;
 
     mainWindow->setProgressBar(fraction);
-    mainWindow->setProgressBar(text);
 
     mainWindow->update();
 }
@@ -150,7 +151,6 @@ void mainWindow::on_startButton_activate()
     //this->printValues();
 
     progressbar1->set_fraction(0);
-    progressbar1->set_text("Running...");
 
     imfavorites_engine *program = new imfavorites_engine();
     program->setTargetDir(directoryEntry->get_text());
@@ -168,8 +168,32 @@ void mainWindow::on_startButton_activate()
 
     program->run();
 
-    //progressbar1->set_fraction(1);
-    progressbar1->set_text("Done!");
+    // Construct a "done message"
+
+    string doneMessage = "Finished symbolically linking ";
+    char num_string[64]; // to convert number to string
+
+    if (limitSizeRadio->get_active()) {
+        sprintf(num_string, "%d", program->getCollectedSizeMB());
+        doneMessage.append(num_string).append(" MB of");
+    } else {
+        sprintf(num_string, "%d", program->getCollectedFiles());
+        doneMessage.append(num_string);
+    }
+
+    doneMessage.append(" songs.");
+
+
+    // Display this done message.
+    doneDialog *doneDialog = new class doneDialog();
+    doneDialog->doneDialogText->set_text(doneMessage);
+
+    doneDialog->run();
+
+    delete(doneDialog);
+
+    progressbar1->set_fraction(0);
+
 }
 
 unsigned long mainWindow::getSize() {

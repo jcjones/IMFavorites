@@ -1,7 +1,11 @@
-Version 0.4 (1.0 RC1) - XX April 2004
+Version 0.4 (1.0 RC1) - 17 April 2004
     * Split the UI from the engine
     * Added a GTK2 user interface (gimfavorites)
     * Made the GTK2 UI follow the GNOME Human Interface Guidelines
+    * Up the number of attempted crams before aborting (they take so
+      little time...) to 100 from 50.
+    * Added a "tools" directory and an XMMS enqeue BASH script.
+      (Thanks, Anonymous!) - Resolves Feature Request 936756
 
 Version 0.3 - 24 March 2004
     * Major speed improvements. (~432.5 times faster)
@@ -26,3 +30,6 @@ Version 0.2 - 22 March 2004
 
 Version 0.1 - 21 March 2004
     * The Beginning.
+
+2004/4/14 22:13:21 EDT
+	update files from .glade file
