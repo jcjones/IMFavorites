@@ -14,13 +14,13 @@ AM_CXXFLAGS = -Wno-deprecated @GTKMM_CFLAGS@
 AM_CFLAGS = -Wno-deprecated
 
 if WITH_TAGLIB
-    imfavorites_LDADD = /usr/lib/libtag.so /usr/lib/libsqlite.so @LIBS@
-    gimfavorites_LDADD = /usr/lib/libtag.so /usr/lib/libsqlite.so @LIBS@ @GTKMM_LIBS@
+    imfavorites_LDADD = /usr/lib/libtag.so /usr/lib/libsqlite3.so @LIBS@
+    gimfavorites_LDADD = /usr/lib/libtag.so /usr/lib/libsqlite3.so @LIBS@ @GTKMM_LIBS@
 else
-    imfavorites_LDADD = /usr/lib/libsqlite.so @LIBS@
-    gimfavorites_LDADD = /usr/lib/libsqlite.so @LIBS@ @GTKMM_LIBS@
+    imfavorites_LDADD = /usr/lib/libsqlite3.so @LIBS@
+    gimfavorites_LDADD = /usr/lib/libsqlite3.so @LIBS@ @GTKMM_LIBS@
 endif
 
-imfavorites_DEPENDENCIES = /usr/include/sqlite.h
-gimfavorites_DEPENDENCIES = /usr/include/sqlite.h
+imfavorites_DEPENDENCIES = /usr/include/sqlite3.h
+gimfavorites_DEPENDENCIES = /usr/include/sqlite3.h
 

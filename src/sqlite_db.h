@@ -14,7 +14,7 @@
 
 #include <iostream>
 #include <string>
-#include <sqlite.h>
+#include <sqlite3.h>
 #include <unistd.h> // for usleep
 
 using namespace std;
@@ -24,7 +24,7 @@ using namespace std;
 */
 class sqlite_db{
 private:
-    sqlite *p_db;
+    sqlite3 *p_db;
 
     char *errmsg;
     const char **p_fields;
@@ -33,7 +33,7 @@ private:
     int nrecs;
     int queryDone;
 
-    sqlite_vm *vm;
+    sqlite3_stmt *vm;
 
     string pathToDB;
 

@@ -28,10 +28,10 @@ sqlite_db::sqlite_db()
 sqlite_db::~sqlite_db()
 {
     if (vm != 0)
-        sqlite_finalize( vm, &errmsg );
+        sqlite3_finalize( vm );
 
     if (p_db != 0)
-        sqlite_close(p_db);
+        sqlite3_close(p_db);
 }
 
 int sqlite_db::isOpen() {
@@ -44,23 +44,29 @@ int sqlite_db::isOpen() {
 
 int sqlite_db::open(string in) {
     pathToDB = in;
-    p_db = sqlite_open(pathToDB.c_str(), 0777, 0);
-    return this->isOpen();
+    return sqlite3_open(pathToDB.c_str(), &p_db) == SQLITE_OK;
 }
 
 int sqlite_db::execute(string query) {
     if (!this->isOpen()) return -1;
 
-    if (vm != 0)
-        sqlite_finalize( vm, &errmsg );
+//    if (vm != 0)
+//        sqlite3_finalize( vm );
 
     /* Retrieve a single song from the DB for initial path name! */
-    sqlite_compile( p_db, query.c_str(), &pzTail, &vm, &errmsg );
+    int retval = sqlite3_prepare( p_db, query.c_str(), query.length(), &vm, &pzTail ); 
+
+    if (retval != SQLITE_OK) { 
+        // Something is horribly wrong
+        cout << "Critical failure while attempting to compile statement: " << query << endl;
+        cout << "Exiting..." << endl;
+        exit(0);
+    }
 
     queryDone = 0;
 
     if (errmsg != NULL) {
-        sqlite_freemem(errmsg);
+        sqlite3_free(errmsg);
         return -1;
     }
 
@@ -70,37 +76,37 @@ int sqlite_db::execute(string query) {
 int sqlite_db::next() {
     if (!this->isOpen() || queryDone) return 0;
 
-    int retval = sqlite_step( vm, &nrecs, &p_fields, &p_col_names );
+    int retval = sqlite3_step( vm );
 
     while (retval == SQLITE_BUSY) {
         // busy, try your call again later.
         usleep(500);
-        retval = sqlite_step( vm, &nrecs, &p_fields, &p_col_names );
+        retval = sqlite3_step( vm );
     }
 
     if ( retval != SQLITE_ROW) {
         queryDone = 1;
         return 0;
     }
-    return nrecs;
+    return getNumResults();
 }
 
 int sqlite_db::getNumResults() {
     if (!this->isOpen() || queryDone) return -1;
-
+    nrecs = sqlite3_data_count( vm );
     return nrecs;
 }
 
 const char * sqlite_db::getFieldPChar(int i) {
-    if (!this->isOpen() || queryDone) return "";
+    if (!this->isOpen() || queryDone || i < sqlite3_column_count( vm ) ) return "";
 
-    return p_fields[i];
+    return (const char *)sqlite3_column_text(vm, i);
 }
 
 string sqlite_db::getField(int i) {
-    if (!this->isOpen() || queryDone) return "";
+    if (!this->isOpen() || queryDone || i < sqlite3_column_count( vm ) ) return "";
 
-    return string(p_fields[i]);
+    return string((const char *)sqlite3_column_text(vm, i));
 }
 
 

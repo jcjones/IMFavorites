@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     const char * optv[] = {
         "s:maxsize SIZE",
         "n:maxnum NUMBER",
+        "m:mask MASK",
 #ifdef HAVE_TAGLIB_TAGLIB_H
         "t:time MINUTES:SECONDS",
         "\07|music-cd \b",
@@ -90,6 +91,10 @@ int main(int argc, char **argv)
             if (optarg == NULL)  ++errors;
             program->setNumFiles(atoi(optarg));
             break;
+        case 'm' :
+            if (optarg == NULL)  ++errors;
+            program->setFilenameMask(optarg);
+            break;
         case 't' :
             if (optarg == NULL) {
                 ++errors;
@@ -137,6 +142,7 @@ int main(int argc, char **argv)
             cout << "\t   --cd\t\t\t Set the size to 700 MB (80-min CD-R)" << endl;
             cout << "\t   --dvd\t\t Set the size to 4.7 GB (120-min DVD)" << endl;
             cout << "\t-n|--maxnum\t<num>\t Maximum number of songs to copy" << endl;
+            cout << "\t-m|--mask\t<mask>\t Mask to apply, e.g. *.mp3" << endl;
 #ifdef HAVE_TAGLIB_TAGLIB_H
             cout << "\t-t|--time\t<m>:<s>\t Length of resulting collection" << endl;
             cout << "\t   --music-cd\t\t Set the length to 80-minutes (CD-R)" << endl;

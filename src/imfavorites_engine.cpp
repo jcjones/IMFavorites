@@ -14,7 +14,7 @@
 #define IMFAVORITES_VERSION "1.1, 1 May 2004"
 
 imfavorites_engine::imfavorites_engine() {
-    string pathToDB = string(getenv("HOME")).append("/.imms/imms.db");
+    string pathToDB = string(getenv("HOME")).append("/.imms/imms2.db");
 
     // Variable init
     numFiles        = 0; // number of files linked
@@ -26,7 +26,9 @@ imfavorites_engine::imfavorites_engine() {
                          //  >0 when enabled, and
                          //  >1 when actively cramming.
     verbose         = 0; // verbosity level (bigger is more verbose)
-
+    minScore        = 100; // Minimum score to allow...
+    
+    filenameMask    = "*"; // Mask by which to filter final output
 
     // Init through helpers
     this->setTargetSize(650);
@@ -38,6 +40,8 @@ imfavorites_engine::imfavorites_engine() {
     // Initial callback (can be overridden)
     this->setCallback(default_progress_cb);
 
+    this->setFilenameMask(filenameMask);
+
     // Start the DB
     database = new sqlite_db();
 
@@ -46,6 +50,8 @@ imfavorites_engine::imfavorites_engine() {
 
     if (!database->isOpen()) cerr << "Failed to open DB at " <<  pathToDB << endl;
     else mainMp3MaskDirectory = this->findMask();
+
+    database->execute("BEGIN TRANSACTION");
 }
 
 imfavorites_engine::~imfavorites_engine() {
@@ -105,6 +111,18 @@ bool imfavorites_engine::setOutStream() {
 bool imfavorites_engine::setPretend(int in) {
     pretend = in;
     return true;
+}
+
+bool imfavorites_engine::setMinScore(int in) {
+  minScore = in;
+  return true;
+}
+
+bool imfavorites_engine::setFilenameMask(string mask) {
+  if (mask == "") return false;
+
+  filenameMask = mask;
+  return true;
 }
 
 int imfavorites_engine::makeDirectory(string thisDirectory) {
@@ -237,14 +255,17 @@ int imfavorites_engine::runFavorites(void) {
     char maxNum_s[64];
     sprintf(maxNum_s, "%d", maxNum);
 
+    char minScore_s[64];
+    sprintf(minScore_s, "%d", minScore);
+
     if (!pretend)  {
         if ( this->makeDirectory(symTargetDir) < 1 ) return 0;
     }
 
 
     /* Build initial SQL statement */
-    string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating > 99 ORDER BY Rating.rating DESC ");
-
+    string sql_command = string("SELECT Rating.rating, Library.path FROM Library INNER JOIN Rating ON Rating.uid=Library.uid WHERE Rating.rating >= ").append(minScore_s).append(" AND Library.path GLOB \"").append(filenameMask).append("\" ORDER BY Rating.rating DESC ");
+    
     if (limitSetting == 1) {
         sql_command.append("LIMIT ").append(maxNum_s).append(";");
     } else {
@@ -253,6 +274,7 @@ int imfavorites_engine::runFavorites(void) {
 
     /* Go */
 
+    cout << sql_command << endl;
     database->execute(sql_command);
 
     /* Begin looping and taking care of data */
