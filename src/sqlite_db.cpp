@@ -98,15 +98,17 @@ int sqlite_db::getNumResults() {
 }
 
 const char * sqlite_db::getFieldPChar(int i) {
-    if (!this->isOpen() || queryDone || i < sqlite3_column_count( vm ) ) return "";
 
-    return (const char *)sqlite3_column_text(vm, i);
+    if (!this->isOpen() || queryDone || i > sqlite3_column_count( vm ) ) return "";
+
+    return (char *)sqlite3_column_text(vm, i);
 }
 
 string sqlite_db::getField(int i) {
-    if (!this->isOpen() || queryDone || i < sqlite3_column_count( vm ) ) return "";
 
-    return string((const char *)sqlite3_column_text(vm, i));
+    if (!this->isOpen() || queryDone || i > sqlite3_column_count( vm ) ) return "";
+
+    return string((char *)sqlite3_column_text(vm, i));
 }
 
 

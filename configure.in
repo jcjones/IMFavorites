@@ -57,11 +57,11 @@ fi
 
 dnl Check for SQLite
 
-AC_CHECK_LIB(sqlite, sqlite_open,, [with_sqlite=no])
-AC_CHECK_HEADERS(sqlite.h,, [with_sqlite=no])
+AC_CHECK_LIB(sqlite3, sqlite3_open,, [with_sqlite=no])
+AC_CHECK_HEADERS(sqlite3.h,, [with_sqlite=no])
 
 if test "x$with_sqlite" = "xno"; then
-        AC_MSG_ERROR([sqlite required and missing.])
+        AC_MSG_ERROR([sqlite3 required and missing.])
 fi
 
 dnl Check for TagLib

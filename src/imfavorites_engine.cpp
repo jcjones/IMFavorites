@@ -274,7 +274,6 @@ int imfavorites_engine::runFavorites(void) {
 
     /* Go */
 
-    cout << sql_command << endl;
     database->execute(sql_command);
 
     /* Begin looping and taking care of data */

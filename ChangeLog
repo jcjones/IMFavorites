@@ -1,6 +1,10 @@
-Version 1.1 - 28 April 2004
+Version 1.2 - ?
+    * Database interface now uses SQLite 3.x, to keep up with IMMS.
+    * Regular Expressions support through a filename mask.
+
+Version 1.1 - 1 May 2004
     * May have fixed an odd GTKMM problem involving the PixBuf loader.
-    * Re-enabled Gettext support.
+    * Re-enabled Gettext support to fix a GCC 3.3 compile error.
 
 Version 1.0 - 23 April 2004
     * Added configure-time selection of whether to build gimfavorites

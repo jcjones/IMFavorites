@@ -27,7 +27,8 @@ Dependencies:
 
 	glibc
 	IMMS 
-	SQLite
+	SQLite3
+	librsvg		(optional)
 	GTKMM 2.0+	(optional)
 	TagLib		(optional)
 
