@@ -2,19 +2,20 @@
 # using glademm V2.0.0.1
 #
 # newer (non customized) versions of this file go to Makefile.am_new
+
 bin_PROGRAMS = imfavorites gimfavorites
 
 imfavorites_SOURCES = imfavorites.cc imfavorites_engine.cpp sqlite_db.cpp options.cpp
 
+gimfavorites_SOURCES = fileSelection.cc fileSelection_glade.cc imfavorites_engine.cpp mainWindow.cc mainWindow_glade.cc sqlite_db.cpp gimfavorites.cc
+
 noinst_HEADERS = mainWindow_glade.h mainWindow.h fileSelection_glade.h fileSelection.h imfavorites_engine.h sqlite_db.h options.h
 
 AM_CXXFLAGS = -Wno-deprecated @GTKMM_CFLAGS@
+AM_CFLAGS = -Wno-deprecated
 
 imfavorites_LDADD = /usr/lib/libsqlite.so @LIBS@ @GTKMM_LIBS@
 imfavorites_DEPENDENCIES = /usr/include/sqlite.h
 
-
-AM_CFLAGS = -Wno-deprecated
-gimfavorites_SOURCES = fileSelection.cc fileSelection_glade.cc imfavorites_engine.cpp mainWindow.cc mainWindow_glade.cc sqlite_db.cpp gimfavorites.cc
 gimfavorites_LDADD = /usr/lib/libsqlite.so @LIBS@ @GTKMM_LIBS@
 gimfavorites_DEPENDENCIES = /usr/include/sqlite.h

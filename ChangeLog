@@ -1,6 +1,6 @@
 Version 0.4 (1.0 RC1) - XX April 2004
     * Split the UI from the engine
-    * Added a GTK2 user interface
+    * Added a GTK2 user interface (gimfavorites)
     * Made the GTK2 UI follow the GNOME Human Interface Guidelines
 
 Version 0.3 - 24 March 2004

@@ -13,11 +13,16 @@
 # PARTICULAR PURPOSE.
 
 
+
+# generated 2004/3/30 9:46:59 EST by pug@resmiranda.berthall.com.(none)
+# using glademm V2.0.0.1
+#
+# newer (non customized) versions of this file go to Makefile.am_new
 SHELL = /bin/sh
 
-srcdir = .
-top_srcdir = ..
-
+srcdir = /home/pug/src/imfavorites/src
+top_srcdir = /home/pug/src/imfavorites
+VPATH = /home/pug/src/imfavorites/src
 prefix = /usr/local
 exec_prefix = ${prefix}
 
@@ -99,7 +104,7 @@ LN_S = ln -s
 LTLIB = @LTLIB@
 LTLIBICONV = 
 LTLIBINTL = 
-MKINSTALLDIRS = ./mkinstalldirs
+MKINSTALLDIRS = /home/pug/src/imfavorites/mkinstalldirs
 OBJDUMP = @OBJDUMP@
 PACKAGE = imfavorites
 PKG_CONFIG = /usr/bin/pkg-config
@@ -108,38 +113,43 @@ RANLIB = ranlib
 STRIP = strip
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 0.0
+VERSION = 0.4
 am__include = include
 am__quote = 
 install_sh = /home/pug/src/imfavorites/install-sh
 
-# generated 2004/3/30 9:46:59 EST by pug@resmiranda.berthall.com.(none)
-# using glademm V2.0.0.1
-#
-# newer (non customized) versions of this file go to Makefile.am_new
-bin_PROGRAMS = imfavorites
+bin_PROGRAMS = imfavorites gimfavorites
 
-imfavorites_SOURCES = imfavorites.cc	mainWindow_glade.cc 	mainWindow.cc 	fileSelection_glade.cc 	fileSelection.cc imfavorites_engine.cpp sqlite_db.cpp
+imfavorites_SOURCES = imfavorites.cc imfavorites_engine.cpp sqlite_db.cpp options.cpp
 
-noinst_HEADERS = mainWindow_glade.h mainWindow.h fileSelection_glade.h fileSelection.h imfavorites_engine.h sqlite_db.h
+gimfavorites_SOURCES = fileSelection.cc fileSelection_glade.cc imfavorites_engine.cpp mainWindow.cc mainWindow_glade.cc sqlite_db.cpp gimfavorites.cc
+
+noinst_HEADERS = mainWindow_glade.h mainWindow.h fileSelection_glade.h fileSelection.h imfavorites_engine.h sqlite_db.h options.h
 
 AM_CXXFLAGS = -Wno-deprecated -I/usr/include/gtkmm-2.0 -I/usr/lib/gtkmm-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/sigc++-1.2/include -I/usr/include/sigc++-1.2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/X11R6/include -I/usr/include/freetype2 -I/usr/include/atk-1.0  
+AM_CFLAGS = -Wno-deprecated
 
-imfavorites_LDADD = /usr/lib/libsqlite.so  -Wl,--export-dynamic -lgtkmm-2.0 -lgdkmm-2.0 -latkmm-1.0 -lgtk-x11-2.0 -lpangomm-1.0 -lglibmm-2.0 -lsigc-1.2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
+imfavorites_LDADD = /usr/lib/libsqlite.so -lsqlite  -Wl,--export-dynamic -lgtkmm-2.0 -lgdkmm-2.0 -latkmm-1.0 -lgtk-x11-2.0 -lpangomm-1.0 -lglibmm-2.0 -lsigc-1.2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
 imfavorites_DEPENDENCIES = /usr/include/sqlite.h
 
-AM_CFLAGS = -Wno-deprecated
+gimfavorites_LDADD = /usr/lib/libsqlite.so -lsqlite  -Wl,--export-dynamic -lgtkmm-2.0 -lgdkmm-2.0 -latkmm-1.0 -lgtk-x11-2.0 -lpangomm-1.0 -lglibmm-2.0 -lsigc-1.2 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
+gimfavorites_DEPENDENCIES = /usr/include/sqlite.h
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = imfavorites$(EXEEXT)
+bin_PROGRAMS = imfavorites$(EXEEXT) gimfavorites$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
+am_gimfavorites_OBJECTS = fileSelection.$(OBJEXT) \
+	fileSelection_glade.$(OBJEXT) imfavorites_engine.$(OBJEXT) \
+	mainWindow.$(OBJEXT) mainWindow_glade.$(OBJEXT) \
+	sqlite_db.$(OBJEXT) gimfavorites.$(OBJEXT)
+gimfavorites_OBJECTS = $(am_gimfavorites_OBJECTS)
+gimfavorites_LDFLAGS =
 am_imfavorites_OBJECTS = imfavorites.$(OBJEXT) \
-	mainWindow_glade.$(OBJEXT) mainWindow.$(OBJEXT) \
-	fileSelection_glade.$(OBJEXT) fileSelection.$(OBJEXT) \
-	imfavorites_engine.$(OBJEXT) sqlite_db.$(OBJEXT)
+	imfavorites_engine.$(OBJEXT) sqlite_db.$(OBJEXT) \
+	options.$(OBJEXT)
 imfavorites_OBJECTS = $(am_imfavorites_OBJECTS)
 imfavorites_LDFLAGS =
 
@@ -147,16 +157,17 @@ DEFS = -DHAVE_CONFIG_H
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = 
 LDFLAGS = 
-LIBS = 
+LIBS = -lsqlite 
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/fileSelection.Po \
 	./$(DEPDIR)/fileSelection_glade.Po \
+	./$(DEPDIR)/gimfavorites.Po \
 	./$(DEPDIR)/imfavorites.Po \
 	./$(DEPDIR)/imfavorites_engine.Po \
 	./$(DEPDIR)/mainWindow.Po \
 	./$(DEPDIR)/mainWindow_glade.Po \
-	./$(DEPDIR)/sqlite_db.Po
+	./$(DEPDIR)/options.Po ./$(DEPDIR)/sqlite_db.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -174,11 +185,11 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(imfavorites_SOURCES)
+DIST_SOURCES = $(gimfavorites_SOURCES) $(imfavorites_SOURCES)
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
-SOURCES = $(imfavorites_SOURCES)
+SOURCES = $(gimfavorites_SOURCES) $(imfavorites_SOURCES)
 
 all: all-am
 
@@ -218,6 +229,9 @@ clean-binPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
+gimfavorites$(EXEEXT): $(gimfavorites_OBJECTS) $(gimfavorites_DEPENDENCIES) 
+	@rm -f gimfavorites$(EXEEXT)
+	$(CXXLINK) $(gimfavorites_LDFLAGS) $(gimfavorites_OBJECTS) $(gimfavorites_LDADD) $(LIBS)
 imfavorites$(EXEEXT): $(imfavorites_OBJECTS) $(imfavorites_DEPENDENCIES) 
 	@rm -f imfavorites$(EXEEXT)
 	$(CXXLINK) $(imfavorites_LDFLAGS) $(imfavorites_OBJECTS) $(imfavorites_LDADD) $(LIBS)
@@ -230,10 +244,12 @@ distclean-compile:
 
 include ./$(DEPDIR)/fileSelection.Po
 include ./$(DEPDIR)/fileSelection_glade.Po
+include ./$(DEPDIR)/gimfavorites.Po
 include ./$(DEPDIR)/imfavorites.Po
 include ./$(DEPDIR)/imfavorites_engine.Po
 include ./$(DEPDIR)/mainWindow.Po
 include ./$(DEPDIR)/mainWindow_glade.Po
+include ./$(DEPDIR)/options.Po
 include ./$(DEPDIR)/sqlite_db.Po
 
 distclean-depend:
