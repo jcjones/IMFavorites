@@ -77,11 +77,11 @@ int main(int argc, char **argv)
         case '\05' :
             // 700 meg CD size - max size is 737280000 bytes.
             // We come up just short of that with this option.
-            program->setTargetSize(700);
+            program->setTargetSize(683);
             break;
         case '\06' :
             /* DVD size */
-            program->setTargetSize(4700);
+            program->setTargetSize(4520);
             break;
         case '\07' :
             program->setTargetLength(80*60);

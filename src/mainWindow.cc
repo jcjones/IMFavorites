@@ -235,9 +235,10 @@ void mainWindow::on_startButton_activate()
 }
 
 unsigned long mainWindow::getSize() {
-    if (sizeCDRadio->get_active()) return 700;
-    if (sizeCD2Radio->get_active()) return 650;
-    if (sizeDVDRadio->get_active()) return 4700;
+    // DVDs don't have 4.7 GiB, they have 4.7 GB
+    if (sizeCDRadio->get_active()) return 683;
+    if (sizeCD2Radio->get_active()) return 625;
+    if (sizeDVDRadio->get_active()) return 4520;
     if (sizeOtherRadio->get_active()) return otherSizeSpinButton->get_value_as_int();
 
     // should not get here...
