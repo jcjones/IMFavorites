@@ -6,6 +6,8 @@ Version 1.0 - XX April 2004
     * Add song-length limiting to the GTK+ GUI and console application,
       closing feature request 934108.
     * Add --music-cd to the console application.
+    * Changed the /home/$user default target in the GUI to
+      /home/$user/favorite_music/
 
 Version 0.4 (1.0 RC1) - 17 April 2004
     * Split the UI from the engine

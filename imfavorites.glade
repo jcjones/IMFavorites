@@ -492,6 +492,7 @@ your Target Directory.</property>
 		    <widget class="GtkSpinButton" id="minutesSpinButton">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Number of minutes to which the collection should be limited</property>
 		      <property name="can_focus">True</property>
 		      <property name="climb_rate">1</property>
 		      <property name="digits">0</property>
@@ -533,6 +534,7 @@ your Target Directory.</property>
 		    <widget class="GtkSpinButton" id="secondsSpinButton">
 		      <property agent="glademm" name="cxx_visibility">protected</property>
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Number of seconds to which the collection should be limited</property>
 		      <property name="can_focus">True</property>
 		      <property name="climb_rate">1</property>
 		      <property name="digits">0</property>

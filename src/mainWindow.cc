@@ -43,7 +43,13 @@ static void progress_callback(imfavorites_engine* engine, int songs) {
 }
 
 mainWindow::mainWindow() {
-    directoryEntry->set_text(string(getenv("HOME")).append("/"));
+    directoryEntry->set_text(string(getenv("HOME")).append("/favorite_music/"));
+
+#ifndef HAVE_TAGLIB_TAGLIB_H
+    limitLengthRadio->set_sensitive(false);
+    minutesSpinButton->set_sensitive(false);
+    secondsSpinButton->set_sensitive(false);
+#endif // HAVE_TAGLIB_TAGLIB_H
 }
 
 
